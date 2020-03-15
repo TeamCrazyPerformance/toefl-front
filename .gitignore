@@ -10,6 +10,7 @@
 
 # production
 /build
+scpServerUpload
 
 # misc
 .DS_Store
