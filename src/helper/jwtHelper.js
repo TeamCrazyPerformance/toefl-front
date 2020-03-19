@@ -16,7 +16,7 @@ export const removeJwt = () => {
 export const jwtExpiryValidate = () => {
   const jwt = sessionStorage.getItem(jwtLocalStorageVariableName);
 
-  if (!jwt) return new Error("No jwt");
+  if (!jwt) throw new Error("No jwt");
 
   const decodedJwt = jwtDecode(jwt);
   const currentTime = new Date().getTime();
