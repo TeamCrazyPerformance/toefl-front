@@ -1,5 +1,7 @@
-const sagas = ()  => {
-  console.log("This is sagas");
-};
+import { all } from "redux-saga/effects";
+import authSaga from "./auth/saga";
 
-export default sagas;
+// Combine all sagas.
+export default function* rootSaga() {
+  yield all([authSaga()]);
+}
