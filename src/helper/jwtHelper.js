@@ -2,8 +2,6 @@ import jwtDecode from "jwt-decode";
 
 const jwtLocalStorageVariableName = "toeflJwt";
 
-export const getJwt = () => sessionStorage.getItem(jwtLocalStorageVariableName);
-
 export const setJwt = jwt => {
   if (typeof jwt === "undefined") return false;
   sessionStorage.setItem(jwtLocalStorageVariableName, jwt);
@@ -16,7 +14,7 @@ export const removeJwt = () => {
 };
 
 export const jwtExpiryValidate = () => {
-  const jwt = getJwt();
+  const jwt = sessionStorage.getItem(jwtLocalStorageVariableName);
 
   if (!jwt) return new Error("No jwt");
 
