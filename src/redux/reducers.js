@@ -1,5 +1,4 @@
-const reducers = ()  => {
-  console.log("This is reducers");
-};
+import auth from "./auth/reducer";
 
-export default reducers;
+// Combine all reducers.
+export default { auth };
