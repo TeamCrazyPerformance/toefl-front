@@ -2,6 +2,10 @@ import jwtDecode from "jwt-decode";
 
 const jwtLocalStorageVariableName = "toeflJwt";
 
+export const getJwt = () => {
+  return sessionStorage.getItem(jwtLocalStorageVariableName);
+};
+
 export const setJwt = jwt => {
   if (!jwt) return;
   sessionStorage.setItem(jwtLocalStorageVariableName, jwt);
