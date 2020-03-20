@@ -3,15 +3,12 @@ import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 
 const isLogin = false;
-
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        isLogin ? <Component {...props} /> : <Redirect to="/" />
-      }
-    />
+const PrivateRoute = props => {
+  const { component, path, exact, isSignIn } = props;
+  return isSignIn ? (
+    <Route path={path} key={path} exact={exact} comopnent={component} />
+  ) : (
+    <Redirect to="/" />
   );
 };
 

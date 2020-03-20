@@ -3,19 +3,12 @@ import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
 
 const isLogin = false;
-
-const PublicRoute = ({ component: Component, restricted, ...rest }) => {
-  return (
-    <Route
-      {...rest}
-      render={props =>
-        isLogin && restricted ? (
-          <Redirect to="/main" />
-        ) : (
-          <Component {...props} />
-        )
-      }
-    />
+const PublicRoute = props => {
+  const { component, restricted, path, exact, isSignIn } = props;
+  return isSignIn && restricted ? (
+    <Redirect to="/main" />
+  ) : (
+    <Route path={path} key={path} exact={exact} component={component} />
   );
 };
 
