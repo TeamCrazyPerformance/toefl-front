@@ -9,4 +9,4 @@ export const signOutAndRemoveJwt = () => ({
   type: actionTypes.SIGN_OUT_AND_REMOVE_JWT
 });
 
-export const jwtValidate = () => ({ type: actionTypes.JWT_VALIDATE });
+export const validateJwt = () => ({ type: actionTypes.VALIDATE_JWT });
