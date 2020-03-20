@@ -1,5 +1,17 @@
-const scrollOnTopHelper = () => {
-  console.log("This is scrollOnTopHelper");
-};
+import { useEffect } from "react";
+import { withRouter } from "react-router-dom";
 
-export default scrollOnTopHelper;
+function ScrollToTopHelper({ history }) {
+  useEffect(() => {
+    const unlisten = history.listen(() => {
+      window.scrollTo(0, 0);
+    });
+    return () => {
+      unlisten();
+    };
+  }, [history]);
+
+  return null;
+}
+
+export default withRouter(ScrollToTopHelper);
