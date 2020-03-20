@@ -3,30 +3,29 @@ import * as actionTypes from "./actionTypes";
 import * as jwtHelper from "../../helper/jwtHelper";
 import * as api from "./api";
 
-const setJwtToSessionStorage = function* setJwtToSessionStorage() {
-  yield takeEvery(
-    actionTypes.SIGN_IN_AND_SET_JWT,
-    function* setJwtToSessionStorageSaga({ jwt }) {
-      yield call(() => jwtHelper.setJwt(jwt));
-      yield put({ type: actionTypes.SIGN_IN_AND_SET_JWT_SUCCESS });
-    }
-  );
+const setJwt = function* setJwt() {
+  yield takeEvery(actionTypes.SIGN_IN_AND_SET_JWT, function* setJwtSaga({
+    jwt
+  }) {
+    yield call(() => jwtHelper.setJwt(jwt));
+    yield put({ type: actionTypes.SIGN_IN_AND_SET_JWT_SUCCESS });
+  });
 };
 
-const removeJwtToSessionStorage = function* removeJwtToSessionStorage() {
+const removeJwt = function* removeJwt() {
   yield takeEvery(
     actionTypes.SIGN_OUT_AND_REMOVE_JWT,
-    function* removeJwtToSessionStorageSaga() {
+    function* removeJwtSaga() {
       yield call(() => jwtHelper.removeJwt());
       yield put({ type: actionTypes.SIGN_OUT_AND_REMOVE_JWT_SUCCESS });
     }
   );
 };
 
-const jwtValidate = function* jwtValidate() {
-  yield takeEvery(actionTypes.JWT_VALIDATE, function* jwtValidateSaga() {
+const validateJwt = function* validateJwt() {
+  yield takeEvery(actionTypes.JWT_VALIDATE, function* validateJwtSaga() {
     try {
-      const jwtExpiryValidation = yield jwtHelper.jwtExpiryValidate();
+      const jwtExpiryValidation = yield jwtHelper.validateJwt();
       if (jwtExpiryValidation)
         yield put({ type: actionTypes.JWT_VALIDATE_TURE });
       else yield put({ type: actionTypes.JWT_REFRESH });
@@ -36,9 +35,9 @@ const jwtValidate = function* jwtValidate() {
   });
 };
 
-const jwtRefresh = function* jwtRefresh() {
-  yield takeEvery(actionTypes.JWT_REFRESH, function* jwtRefreshSaga() {
-    const newJwt = yield api.jwtRefresh();
+const refreshJwt = function* refreshJwt() {
+  yield takeEvery(actionTypes.JWT_REFRESH, function* refreshJwtSaga() {
+    const newJwt = yield api.refreshJwt();
     if (newJwt) yield call(() => jwtHelper.setJwt(newJwt));
     else yield put({ type: actionTypes.SIGN_OUT_AND_REMOVE_JWT });
   });
@@ -46,9 +45,9 @@ const jwtRefresh = function* jwtRefresh() {
 
 export default function* authSaga() {
   yield all([
-    fork(setJwtToSessionStorage),
-    fork(removeJwtToSessionStorage),
-    fork(jwtValidate),
-    fork(jwtRefresh)
+    fork(setJwt),
+    fork(removeJwt),
+    fork(validateJwt),
+    fork(refreshJwt)
   ]);
 }
