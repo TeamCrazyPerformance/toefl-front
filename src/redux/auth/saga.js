@@ -23,12 +23,12 @@ const removeJwt = function* removeJwt() {
 };
 
 const validateJwt = function* validateJwt() {
-  yield takeEvery(actionTypes.JWT_VALIDATE, function* validateJwtSaga() {
+  yield takeEvery(actionTypes.VALIDATE_JWT, function* validateJwtSaga() {
     try {
       const jwtExpiryValidation = yield jwtHelper.validateJwt();
       if (jwtExpiryValidation)
-        yield put({ type: actionTypes.JWT_VALIDATE_TURE });
-      else yield put({ type: actionTypes.JWT_REFRESH });
+        yield put({ type: actionTypes.VALIDATE_JWT_TURE });
+      else yield put({ type: actionTypes.REFRESH_JWT });
     } catch (error) {
       yield put({ type: actionTypes.SIGN_OUT_AND_REMOVE_JWT });
     }
@@ -36,7 +36,7 @@ const validateJwt = function* validateJwt() {
 };
 
 const refreshJwt = function* refreshJwt() {
-  yield takeEvery(actionTypes.JWT_REFRESH, function* refreshJwtSaga() {
+  yield takeEvery(actionTypes.REFRESH_JWT, function* refreshJwtSaga() {
     const newJwt = yield api.refreshJwt();
     if (newJwt) yield call(() => jwtHelper.setJwt(newJwt));
     else yield put({ type: actionTypes.SIGN_OUT_AND_REMOVE_JWT });

@@ -12,7 +12,7 @@ const authReducer = (state = authStoreInitialState, action) => {
     case actionTypes.SIGN_OUT_AND_REMOVE_JWT_SUCCESS: {
       return { isSignIn: false };
     }
-    case actionTypes.JWT_VALIDATE_TURE: {
+    case actionTypes.VALIDATE_JWT_TURE: {
       return { isSignIn: false };
     }
     default:
