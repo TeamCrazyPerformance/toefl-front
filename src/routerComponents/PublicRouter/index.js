@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { Route, Redirect } from "react-router-dom";
+import { connect } from "react-redux";
 
-const isLogin = false;
 const PublicRoute = props => {
   const { component, restricted, path, exact, isSignIn } = props;
   return isSignIn && restricted ? (
@@ -12,9 +12,22 @@ const PublicRoute = props => {
   );
 };
 
-PublicRoute.prototype = {
-  component: PropTypes.element.isRequired,
-  restricted: PropTypes.bool.isRequired
+PublicRoute.propTypes = {
+  isSignIn: PropTypes.bool.isRequired,
+  component: PropTypes.elementType.isRequired,
+  restricted: PropTypes.bool.isRequired,
+  path: PropTypes.string,
+  exact: PropTypes.bool
 };
 
-export default PublicRoute;
+PublicRoute.defaultProps = {
+  path: "",
+  exact: false
+};
+
+const mapStateToProps = state => {
+  const { auth } = state;
+  return { isSignIn: auth.isSignIn };
+};
+
+export default connect(mapStateToProps)(PublicRoute);
