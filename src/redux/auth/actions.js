@@ -1,12 +1,20 @@
 import * as actionTypes from "./actionTypes";
 
-export const signInAndSetJwt = ({ jwt }) => ({
-  type: actionTypes.SIGN_IN_AND_SET_JWT,
-  jwt
+export const setUserInformationAndJwt = ({
+  jwt,
+  userInformation: { id, email, nickName }
+}) => ({
+  type: actionTypes.SET_USER_INFORMATION_AND_JWT,
+  jwt,
+  userInformation: {
+    id,
+    email,
+    nickName
+  }
 });
 
-export const signOutAndRemoveJwt = () => ({
-  type: actionTypes.SIGN_OUT_AND_REMOVE_JWT
+export const removeUserInformationAndJwt = () => ({
+  type: actionTypes.REMOVE_UESR_INFORMATION_AND_JWT
 });
 
 export const validateJwt = () => ({ type: actionTypes.VALIDATE_JWT });

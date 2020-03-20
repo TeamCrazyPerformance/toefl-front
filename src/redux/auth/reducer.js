@@ -1,19 +1,38 @@
 import * as actionTypes from "./actionTypes";
 
 const authStoreInitialState = {
-  isSignIn: false
+  isSignIn: false,
+  userInformation: {
+    id: "",
+    email: "",
+    nickName: ""
+  }
 };
 
 const authReducer = (state = authStoreInitialState, action) => {
   switch (action.type) {
-    case actionTypes.SIGN_IN_AND_SET_JWT_SUCCESS: {
-      return { isSignIn: true };
+    case actionTypes.SET_USER_INFORMATION: {
+      return {
+        isSignIn: true,
+        userInformation: {
+          id: action.userInformation.id,
+          email: action.userInformation.email,
+          nickName: action.userInformation.nickName
+        }
+      };
     }
-    case actionTypes.SIGN_OUT_AND_REMOVE_JWT_SUCCESS: {
-      return { isSignIn: false };
+    case actionTypes.REMOVE_UESR_INFORMATION: {
+      return {
+        isSignIn: false,
+        userInformation: {
+          id: "",
+          email: "",
+          nickName: ""
+        }
+      };
     }
     case actionTypes.VALIDATE_JWT_TURE: {
-      return { isSignIn: false };
+      return { ...state, isSignIn: true };
     }
     default:
       return state;
