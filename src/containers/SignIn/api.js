@@ -1,8 +1,18 @@
-const callSignInApi = ({ id, password }) => {
-  return new Promise(resolve => {
-    console.log(id, password);
-    resolve({ jwt: "hello" });
-  });
+import fetchHelper from "../../helper/fetchHelper";
+
+const callSignInApi = async ({
+  id,
+  password,
+  apiCallStart,
+  apiCallSuccess,
+  apiCallFailure
+}) => {
+  apiCallStart();
+
+  await fetchHelper
+    .post(`/login`, { id, password })
+    .then(response => apiCallSuccess(response))
+    .catch(() => apiCallFailure());
 };
 
 export default callSignInApi;

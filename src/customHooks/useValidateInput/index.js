@@ -4,7 +4,7 @@ const useValidateInput = (
   initVal,
   emptyValidation = { emptyErrMsg: "값을 입력해주세요" },
   regValidation = {
-    regExp: /^[가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z0-9~!@#$%^&*()_+|<>?:{}+]*$/,
+    regExp: /$/,
     regExpErrMsg: "옳바른 값을 입력해주세요"
   },
   apiValidation = {
@@ -88,7 +88,9 @@ const useValidateInput = (
     validateInput(e.target.value);
   };
 
-  return [inputVal, updateInpuVal, validateInput, errMsg];
+  const updateErrMsg = newErrMsg => setErrMsg(newErrMsg);
+
+  return [inputVal, updateInpuVal, errMsg, updateErrMsg, validateInput];
 };
 
 export default useValidateInput;
