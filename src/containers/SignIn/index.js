@@ -43,7 +43,7 @@ const SignIn = props => {
         apiCallSuccess: res => {
           setLoadingState(false);
           setUserInformationAndJwt({
-            jwt: res.jwt,
+            jwt: res.token,
             userInformation: {
               id: res.userInformation.id,
               email: res.userInformation.email,
