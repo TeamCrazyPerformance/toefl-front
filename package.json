@@ -2,6 +2,7 @@
   "name": "toefl-front",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://13.125.206.140:8080",
   "dependencies": {
     "@material-ui/core": "^4.9.5",
     "@material-ui/icons": "^4.9.1",

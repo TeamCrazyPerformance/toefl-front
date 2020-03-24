@@ -15,24 +15,35 @@ const customHeader = () => {
   };
 };
 
+const USE_FETCH_PAYLOAD = {
+  url: "",
+  method: "",
+  body: {}
+};
+
+const USE_FETCH_LIFE_CYCLE = {
+  apiCallPending: () => {},
+  apiCallSuccess: () => {},
+  // Api call failure means server error not response error
+  apiCallFailure: () => {}
+};
+
 // Make http request with fetch api.
-const base = (method, url, data) => {
-  return fetch(url, {
-    method,
+const fetchHelper = (
+  payload = USE_FETCH_PAYLOAD,
+  lifeCycle = USE_FETCH_LIFE_CYCLE
+) => {
+  return fetch(payload.url, {
     headers: customHeader(),
-    body: JSON.stringify(data)
+    method: payload.method,
+    body: JSON.stringify(payload.body)
   })
     .then(response => {
       if (response.ok) return response.json();
-      return { error: "Error" };
+      return new Error("Server error");
     })
-    .catch(() => ({ error: "Server Error" }));
+    .then(responseJson => lifeCycle.apiCallSuccess(responseJson))
+    .catch(() => lifeCycle.apiCallFailure());
 };
-
-const fetchHelper = {};
-
-["get", "post", "put", "delete"].forEach(method => {
-  fetchHelper[method] = base.bind(Object.create(null), method);
-});
 
 export default fetchHelper;
