@@ -3,70 +3,75 @@ import PropTypes from "prop-types";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as authActions from "../../redux/auth/actions";
-import callSignInApi from "./api";
 import LoadingSpinner from "../../components/LoadingSpinner";
-
+import fetchHelper from "../../helper/fetchHelper";
 import { useValidateInput } from "../../customHooks";
 
 const SignIn = props => {
   const { setUserInformationAndJwt, history } = props;
-  const [loadingState, setLoadingState] = useState(false);
-  const [
-    idVal,
-    updateIdVal,
-    idValErrMsg,
-    updateIdValErrMsg,
-    validateIdVal
-  ] = useValidateInput("practice", { emptyErrMsg: "ID를 입력해 주세요" });
-  const [
-    passwordVal,
-    updatePasswordVal,
-    passwordValErrMsg,
-    updatePasswordValErrMsg,
-    validatePasswordVal
-  ] = useValidateInput("practice", { emptyErrMsg: "Password를 입력해 주세요" });
+  const [isLoading, setIsLoading] = useState(false);
+  const idVal = useValidateInput("", [
+    {
+      validate: val => !(val === ""),
+      validationFalse: "아이디를 입력해 주세요"
+    }
+  ]);
+  const passwordVal = useValidateInput("", [
+    {
+      validate: val => !(val === ""),
+      validationFalse: "비밀번호를 입력해 주세요"
+    }
+  ]);
 
-  const validateInputs = async () => {
-    let validation = false;
-    validation = await validateIdVal();
-    validation = await validatePasswordVal();
-    return validation;
+  const validateInputs = () => {
+    const idValValidation = idVal.validate();
+    const passwordValValidation = passwordVal.validate();
+
+    return idValValidation && passwordValValidation;
   };
 
-  const validateInputsAndSignIn = async () => {
-    const inputsValidation = await validateInputs();
+  const validateInputsAndSignIn = () => {
+    const inputsValidation = validateInputs();
     if (inputsValidation) {
-      callSignInApi({
-        id: idVal,
-        password: passwordVal,
-        apiCallStart: () => setLoadingState(true),
-        apiCallSuccess: res => {
-          setLoadingState(false);
-          setUserInformationAndJwt({
-            jwt: res.token,
-            userInformation: {
-              id: res.userInformation.id,
-              email: res.userInformation.email,
-              nickName: res.userInformation.nickName
-            }
-          });
+      fetchHelper(
+        {
+          url: "/login",
+          method: "post",
+          body: { id: idVal.value, password: passwordVal.value }
         },
-        apiCallFailure: () => {
-          updateIdValErrMsg("아이디 혹은 비밀번호가 일치하지 않습니다");
-          updatePasswordValErrMsg("아이디 혹은 비밀번호가 일치하지 않습니다");
-          setLoadingState(false);
+        {
+          apiCallPending: setIsLoading(true),
+          apiCallSuccess: response => {
+            setIsLoading(false);
+            if (response.success) {
+              setUserInformationAndJwt({
+                jwt: response.token,
+                userInformation: {
+                  id: response.userInformation.id,
+                  email: response.userInformation.email,
+                  nickName: response.userInformation.nickName
+                }
+              });
+            } else {
+              idVal.updateErrMsg("아이디 혹은 비밀번호 오류입니다");
+              passwordVal.updateErrMsg("아이디 혹은 비밀번호 오류입니다");
+            }
+          },
+          apiCallFailure: () => {
+            setIsLoading(false);
+          }
         }
-      });
+      );
     }
   };
 
   return (
-    <LoadingSpinner loadingState={loadingState}>
+    <LoadingSpinner loadingState={isLoading}>
       <h1>Title</h1>
-      <input value={idVal} onChange={updateIdVal} />
-      <div>{idValErrMsg}</div>
-      <input value={passwordVal} onChange={updatePasswordVal} />
-      <div>{passwordValErrMsg}</div>
+      <input value={idVal.value} onChange={idVal.updateValue} />
+      <div>{idVal.errMsg}</div>
+      <input value={passwordVal.value} onChange={passwordVal.updateValue} />
+      <div>{passwordVal.errMsg}</div>
       <input type="button" value="로그인" onClick={validateInputsAndSignIn} />
       <input
         type="button"
