@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch } from "react-router-dom";
 import { PublicRouter, PrivateRouter } from "./routerComponents";
-import ScrollOnTopHelper from "./helper/scrollOnTopHelper";
+import ScrollOnTopHelper from "./helper/ScrollOnTopHelper";
 import { SignIn, SignUp, Main, MyInformation, NotFound } from "./containers";
 
 const AppRouter = () => {
