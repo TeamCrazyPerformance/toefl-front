@@ -1,19 +1,23 @@
 import { useState } from "react";
 
 const VALIDATION_INIT_OPTION = {
-  validate: input => !(input === ""),
+  validation: true,
   validatePending: "",
   validationTrue: "",
   validationFalse: "값을 입력해주세요"
 };
 
-const useValidateInput = (initVal, options = [VALIDATION_INIT_OPTION]) => {
+const useValidateInput = (initVal = "") => {
   const [value, setValue] = useState(initVal);
   const [errMsg, setErrMsg] = useState("");
 
-  const validateForm = (newValue, option = VALIDATION_INIT_OPTION) => {
+  const updateValue = newValue => setValue(newValue);
+
+  const updateErrMsg = newErrMsg => setErrMsg(newErrMsg);
+
+  const validateForm = (option = VALIDATION_INIT_OPTION) => {
     setErrMsg(option.validatePending || "");
-    if (option.validate(newValue)) {
+    if (option.validation) {
       setErrMsg(option.validationTrue || "");
       return true;
     }
@@ -21,28 +25,15 @@ const useValidateInput = (initVal, options = [VALIDATION_INIT_OPTION]) => {
     return false;
   };
 
-  const validate = (newValue = value) => {
+  const validate = (options = [VALIDATION_INIT_OPTION]) => {
     let validation = true;
     options.forEach(option => {
-      if (validation) validation = validateForm(newValue, option);
+      if (validation) validation = validateForm(option);
     });
     return validation;
   };
 
-  const updateValue = e => {
-    setValue(e.target.value);
-    validate(e.target.value);
-  };
-
-  const updateErrMsg = newErrMsg => setErrMsg(newErrMsg);
-
-  return {
-    value,
-    updateValue,
-    errMsg,
-    updateErrMsg,
-    validate
-  };
+  return [value, updateValue, errMsg, updateErrMsg, validate];
 };
 
 export default useValidateInput;
