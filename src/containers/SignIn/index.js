@@ -6,27 +6,16 @@ import * as authActions from "../../redux/auth/actions";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import fetchHelper from "../../helper/fetchHelper";
 import { useValidateInput } from "../../customHooks";
+import SignInComponent from "../../components/SignInComponent";
 
 const SignIn = props => {
-  const { setUserInformationAndJwt, history } = props;
+  const { setUserInformationAndJwt } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [
-    idVal,
-    updateIdVal,
-    idValErrMsg,
-    updateIdValErrMsg,
-    validateIdVal
-  ] = useValidateInput("");
-  const [
-    passwordVal,
-    updatePasswordVal,
-    passwordValErrMsg,
-    updatePasswordValErrMsg,
-    validatePasswordVal
-  ] = useValidateInput("");
+  const id = useValidateInput("");
+  const password = useValidateInput("");
 
-  const validateId = (newValue = idVal) => {
-    return validateIdVal([
+  const validateId = (newValue = id.value) => {
+    return id.validate([
       {
         validation: !(newValue === ""),
         validationFalse: "아이디를 입력해 주세요"
@@ -34,8 +23,8 @@ const SignIn = props => {
     ]);
   };
 
-  const validatePassword = (newValue = passwordVal) => {
-    return validatePasswordVal([
+  const validatePassword = (newValue = password.value) => {
+    return password.validate([
       {
         validation: !(newValue === ""),
         validationFalse: "비밀번호를 입력해 주세요"
@@ -43,21 +32,21 @@ const SignIn = props => {
     ]);
   };
 
-  const updateAndVlidateIdVal = event => {
-    updateIdVal(event.target.value);
+  const updateAndValidateId = event => {
+    id.setValue(event.target.value);
     validateId(event.target.value);
   };
 
-  const updateAndVlidatePasswordVal = event => {
-    updatePasswordVal(event.target.value);
+  const updateAndValidatePassword = event => {
+    password.setValue(event.target.value);
     validatePassword(event.target.value);
   };
 
   const validateInputs = () => {
-    const idValValidation = validateId();
-    const passwordValValidation = validatePassword();
+    const idValidation = validateId();
+    const passwordValidation = validatePassword();
 
-    return idValValidation && passwordValValidation;
+    return idValidation && passwordValidation;
   };
 
   const validateInputsAndSignIn = () => {
@@ -65,9 +54,9 @@ const SignIn = props => {
     if (inputsValidation) {
       fetchHelper(
         {
-          url: "/login",
+          url: process.env.REACT_APP_SIGN_IN_URL,
           method: "post",
-          body: { id: idVal.value, password: passwordVal.value }
+          body: { id: id.value, password: password.value }
         },
         {
           apiCallPending: setIsLoading(true),
@@ -83,8 +72,14 @@ const SignIn = props => {
                 }
               });
             } else {
-              updateIdValErrMsg("아이디 혹은 비밀번호 오류입니다");
-              updatePasswordValErrMsg("아이디 혹은 비밀번호 오류입니다");
+              id.setFeedbackMsgAndValidation(
+                "아이디 혹은 비밀번호 오류입니다",
+                false
+              );
+              password.setFeedbackMsgAndValidation(
+                "아이디 혹은 비밀번호 오류입니다",
+                false
+              );
             }
           },
           apiCallFailure: () => {
@@ -97,25 +92,17 @@ const SignIn = props => {
 
   return (
     <LoadingSpinner loadingState={isLoading}>
-      <h1>Title</h1>
-      <input
-        value={idVal}
-        placeholder="아이디"
-        onChange={updateAndVlidateIdVal}
-      />
-      <div>{idValErrMsg}</div>
-      <input
-        type="password"
-        value={passwordVal}
-        placeholder="비밀번호"
-        onChange={updateAndVlidatePasswordVal}
-      />
-      <div>{passwordValErrMsg}</div>
-      <input type="button" value="로그인" onClick={validateInputsAndSignIn} />
-      <input
-        type="button"
-        value="회원가입"
-        onClick={() => history.push("/signup")}
+      <SignInComponent
+        id={id.value}
+        idValidation={id.validation}
+        idFeedbackMsg={id.feedbackMsg}
+        updateAndValidateId={updateAndValidateId}
+        password={password.value}
+        passowrdValidation={password.validation}
+        passwordFeedbackMsg={password.feedbackMsg}
+        updateAndValidatePassword={updateAndValidatePassword}
+        validateInputsAndSignIn={validateInputsAndSignIn}
+        signUpPageUrl="/signup"
       />
     </LoadingSpinner>
   );

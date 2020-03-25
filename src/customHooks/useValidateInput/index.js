@@ -9,31 +9,44 @@ const VALIDATION_INIT_OPTION = {
 
 const useValidateInput = (initVal = "") => {
   const [value, setValue] = useState(initVal);
-  const [errMsg, setErrMsg] = useState("");
-
-  const updateValue = newValue => setValue(newValue);
-
-  const updateErrMsg = newErrMsg => setErrMsg(newErrMsg);
+  const [feedbackMsg, setFeedbackMsg] = useState("");
+  const [validation, setValidation] = useState(true);
 
   const validateForm = (option = VALIDATION_INIT_OPTION) => {
-    setErrMsg(option.validatePending || "");
+    setFeedbackMsg(option.validatePending || "");
     if (option.validation) {
-      setErrMsg(option.validationTrue || "");
+      setFeedbackMsg(option.validationTrue || "");
       return true;
     }
-    setErrMsg(option.validationFalse || "");
+    setFeedbackMsg(option.validationFalse || "");
     return false;
   };
 
   const validate = (options = [VALIDATION_INIT_OPTION]) => {
-    let validation = true;
+    let tempValidation = true;
     options.forEach(option => {
-      if (validation) validation = validateForm(option);
+      if (tempValidation) tempValidation = validateForm(option);
     });
-    return validation;
+    setValidation(tempValidation);
+    return tempValidation;
   };
 
-  return [value, updateValue, errMsg, updateErrMsg, validate];
+  const setFeedbackMsgAndValidation = (
+    newFeedbackMsg = "",
+    newValidation = false
+  ) => {
+    setFeedbackMsg(newFeedbackMsg);
+    setValidation(newValidation);
+  };
+
+  return {
+    value,
+    setValue,
+    feedbackMsg,
+    setFeedbackMsgAndValidation,
+    validation,
+    validate
+  };
 };
 
 export default useValidateInput;
