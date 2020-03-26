@@ -11,7 +11,7 @@ const SignUp = props => {
   const [isLoaing, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [emailForRequestBody, setEmailForRequestBody] = useState("");
-  const [emailValidation, setEmailValidation] = useState(true);
+  const [emailValidation, setEmailValidation] = useState(false);
 
   return (
     <LoadingSpinner loadingState={isLoaing}>
