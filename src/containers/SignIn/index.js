@@ -6,28 +6,47 @@ import * as authActions from "../../redux/auth/actions";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import fetchHelper from "../../helper/fetchHelper";
 import { useValidateInput } from "../../customHooks";
+import SignInComponent from "../../components/SignInComponent";
 
 const SignIn = props => {
-  const { setUserInformationAndJwt, history } = props;
+  const { setUserInformationAndJwt } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const idVal = useValidateInput("", [
-    {
-      validate: val => !(val === ""),
-      validationFalse: "아이디를 입력해 주세요"
-    }
-  ]);
-  const passwordVal = useValidateInput("", [
-    {
-      validate: val => !(val === ""),
-      validationFalse: "비밀번호를 입력해 주세요"
-    }
-  ]);
+  const id = useValidateInput("");
+  const password = useValidateInput("");
+
+  const validateId = (newValue = id.value) => {
+    return id.validate([
+      {
+        validation: !(newValue === ""),
+        validationFalse: "아이디를 입력해 주세요"
+      }
+    ]);
+  };
+
+  const validatePassword = (newValue = password.value) => {
+    return password.validate([
+      {
+        validation: !(newValue === ""),
+        validationFalse: "비밀번호를 입력해 주세요"
+      }
+    ]);
+  };
+
+  const updateAndValidateId = event => {
+    id.setValue(event.target.value);
+    validateId(event.target.value);
+  };
+
+  const updateAndValidatePassword = event => {
+    password.setValue(event.target.value);
+    validatePassword(event.target.value);
+  };
 
   const validateInputs = () => {
-    const idValValidation = idVal.validate();
-    const passwordValValidation = passwordVal.validate();
+    const idValidation = validateId();
+    const passwordValidation = validatePassword();
 
-    return idValValidation && passwordValValidation;
+    return idValidation && passwordValidation;
   };
 
   const validateInputsAndSignIn = () => {
@@ -35,9 +54,9 @@ const SignIn = props => {
     if (inputsValidation) {
       fetchHelper(
         {
-          url: "/login",
+          url: process.env.REACT_APP_SIGN_IN_URL,
           method: "post",
-          body: { id: idVal.value, password: passwordVal.value }
+          body: { id: id.value, password: password.value }
         },
         {
           apiCallPending: setIsLoading(true),
@@ -53,8 +72,14 @@ const SignIn = props => {
                 }
               });
             } else {
-              idVal.updateErrMsg("아이디 혹은 비밀번호 오류입니다");
-              passwordVal.updateErrMsg("아이디 혹은 비밀번호 오류입니다");
+              id.setFeedbackMsgAndValidation(
+                "아이디 혹은 비밀번호 오류입니다",
+                false
+              );
+              password.setFeedbackMsgAndValidation(
+                "아이디 혹은 비밀번호 오류입니다",
+                false
+              );
             }
           },
           apiCallFailure: () => {
@@ -67,16 +92,17 @@ const SignIn = props => {
 
   return (
     <LoadingSpinner loadingState={isLoading}>
-      <h1>Title</h1>
-      <input value={idVal.value} onChange={idVal.updateValue} />
-      <div>{idVal.errMsg}</div>
-      <input value={passwordVal.value} onChange={passwordVal.updateValue} />
-      <div>{passwordVal.errMsg}</div>
-      <input type="button" value="로그인" onClick={validateInputsAndSignIn} />
-      <input
-        type="button"
-        value="회원가입"
-        onClick={() => history.push("/signup")}
+      <SignInComponent
+        id={id.value}
+        idValidation={id.validation}
+        idFeedbackMsg={id.feedbackMsg}
+        updateAndValidateId={updateAndValidateId}
+        password={password.value}
+        passowrdValidation={password.validation}
+        passwordFeedbackMsg={password.feedbackMsg}
+        updateAndValidatePassword={updateAndValidatePassword}
+        validateInputsAndSignIn={validateInputsAndSignIn}
+        signUpPageUrl="/signup"
       />
     </LoadingSpinner>
   );

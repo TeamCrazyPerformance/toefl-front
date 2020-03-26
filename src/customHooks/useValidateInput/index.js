@@ -1,46 +1,50 @@
 import { useState } from "react";
 
 const VALIDATION_INIT_OPTION = {
-  validate: input => !(input === ""),
+  validation: true,
   validatePending: "",
   validationTrue: "",
   validationFalse: "값을 입력해주세요"
 };
 
-const useValidateInput = (initVal, options = [VALIDATION_INIT_OPTION]) => {
+const useValidateInput = (initVal = "") => {
   const [value, setValue] = useState(initVal);
-  const [errMsg, setErrMsg] = useState("");
+  const [feedbackMsg, setFeedbackMsg] = useState("");
+  const [validation, setValidation] = useState(true);
 
-  const validateForm = (newValue, option = VALIDATION_INIT_OPTION) => {
-    setErrMsg(option.validatePending || "");
-    if (option.validate(newValue)) {
-      setErrMsg(option.validationTrue || "");
+  const validateForm = (option = VALIDATION_INIT_OPTION) => {
+    setFeedbackMsg(option.validatePending || "");
+    if (option.validation) {
+      setFeedbackMsg(option.validationTrue || "");
       return true;
     }
-    setErrMsg(option.validationFalse || "");
+    setFeedbackMsg(option.validationFalse || "");
     return false;
   };
 
-  const validate = (newValue = value) => {
-    let validation = true;
+  const validate = (options = [VALIDATION_INIT_OPTION]) => {
+    let tempValidation = true;
     options.forEach(option => {
-      if (validation) validation = validateForm(newValue, option);
+      if (tempValidation) tempValidation = validateForm(option);
     });
-    return validation;
+    setValidation(tempValidation);
+    return tempValidation;
   };
 
-  const updateValue = e => {
-    setValue(e.target.value);
-    validate(e.target.value);
+  const setFeedbackMsgAndValidation = (
+    newFeedbackMsg = "",
+    newValidation = false
+  ) => {
+    setFeedbackMsg(newFeedbackMsg);
+    setValidation(newValidation);
   };
-
-  const updateErrMsg = newErrMsg => setErrMsg(newErrMsg);
 
   return {
     value,
-    updateValue,
-    errMsg,
-    updateErrMsg,
+    setValue,
+    feedbackMsg,
+    setFeedbackMsgAndValidation,
+    validation,
     validate
   };
 };
