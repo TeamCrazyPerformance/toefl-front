@@ -33,7 +33,7 @@ const fetchHelper = (
   payload = USE_FETCH_PAYLOAD,
   lifeCycle = USE_FETCH_LIFE_CYCLE
 ) => {
-  return fetch(payload.url, {
+  return fetch(`${payload.url}`, {
     headers: customHeader(),
     method: payload.method,
     body: JSON.stringify(payload.body)

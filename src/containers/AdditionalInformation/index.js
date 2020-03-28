@@ -114,7 +114,7 @@ const AdditionalInformation = props => {
     if (inputsValidation) {
       fetchHelper(
         {
-          url: process.env.REACT_APP_SIGN_UP,
+          url: `${process.env.REACT_APP_TOEFL_SERVER_URL}${process.env.REACT_APP_SIGN_UP}`,
           method: "post",
           body: {
             id: id.value,

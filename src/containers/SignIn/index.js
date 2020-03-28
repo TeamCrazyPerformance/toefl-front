@@ -54,7 +54,7 @@ const SignIn = props => {
     if (inputsValidation) {
       fetchHelper(
         {
-          url: process.env.REACT_APP_SIGN_IN_URL,
+          url: `${process.env.REACT_APP_TOEFL_SERVER_URL}${process.env.REACT_APP_SIGN_IN_URL}`,
           method: "post",
           body: { id: id.value, password: password.value }
         },

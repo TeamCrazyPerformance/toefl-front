@@ -54,7 +54,7 @@ const EmailValidation = props => {
       email.setFeedbackMsgAndValidation("잠시만 기다려주세요", true);
       fetchHelper(
         {
-          url: process.env.REACT_APP_VALIDATE_EMAIL,
+          url: `${process.env.REACT_APP_TOEFL_SERVER_URL}${process.env.REACT_APP_VALIDATE_EMAIL}`,
           method: "post",
           body: { email: email.value }
         },
@@ -80,7 +80,7 @@ const EmailValidation = props => {
       validationCode.setFeedbackMsgAndValidation("잠시만 기다려주세요", true);
       fetchHelper(
         {
-          url: process.env.REACT_APP_VALIDATE_VALIDATION_CODE,
+          url: `${process.env.REACT_APP_TOEFL_SERVER_URL}${process.env.REACT_APP_VALIDATE_VALIDATION_CODE}`,
           method: "post",
           body: { email: email.value, validationCode: validationCode.value }
         },
