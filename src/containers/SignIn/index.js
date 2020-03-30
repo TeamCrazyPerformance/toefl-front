@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import * as authActions from "../../redux/auth/actions";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import fetchHelper from "../../helper/fetchHelper";
+import apiCallHelper from "../../helper/apiCallHelper";
 import { useValidateInput } from "../../customHooks";
 import SignInComponent from "../../components/SignInComponent";
 
@@ -52,12 +53,12 @@ const SignIn = props => {
   const validateInputsAndSignIn = () => {
     const inputsValidation = validateInputs();
     if (inputsValidation) {
-      fetchHelper(
-        {
+      apiCallHelper(
+        fetchHelper({
           url: process.env.REACT_APP_SIGN_IN_URL,
           method: "post",
           body: { id: id.value, password: password.value }
-        },
+        }),
         {
           apiCallPending: setIsLoading(true),
           apiCallSuccess: response => {

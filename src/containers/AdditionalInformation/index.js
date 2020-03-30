@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import AdditionalInformationComponents from "../../components/AdditionalInformationComponents";
 import { useValidateInput } from "../../customHooks";
 import fetchHelper from "../../helper/fetchHelper";
+import apiCallHelper from "../../helper/apiCallHelper";
 
 const AdditionalInformation = props => {
   const {
@@ -112,8 +113,8 @@ const AdditionalInformation = props => {
   const validateAdditionalInputsAndSignIn = () => {
     const inputsValidation = validateAdditionalInputs();
     if (inputsValidation) {
-      fetchHelper(
-        {
+      apiCallHelper(
+        fetchHelper({
           url: process.env.REACT_APP_SIGN_UP,
           method: "post",
           body: {
@@ -122,7 +123,7 @@ const AdditionalInformation = props => {
             nickName: nickName.value,
             password: password.value
           }
-        },
+        }),
         {
           apiCallStart: () => setIsLoading(true),
           apiCallSuccess: res => {
