@@ -23,6 +23,9 @@ const fetchHelper = (payload = API_CALL_PAYLOAD) => {
     headers: makeCustomHeader(jwtHelper.getJwt()),
     method: payload.method,
     body: JSON.stringify(payload.body)
+  }).then(response => {
+    if (response.ok) return response.json();
+    return new Error("Server error");
   });
 };
 

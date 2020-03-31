@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import EmailValidationComponent from "../../components/EmailValidationComponent";
 import { useValidateInput } from "../../customHooks";
-import fetchHelper from "../../helper/fetchHelper";
 import apiCallHelper from "../../helper/apiCallHelper";
+import * as authApi from "../../api/authApi";
 
 const EmailValidation = props => {
   const {
@@ -53,25 +53,18 @@ const EmailValidation = props => {
     const emailValValidation = validateEmail();
     if (emailValValidation) {
       email.setFeedbackMsgAndValidation("잠시만 기다려주세요", true);
-      apiCallHelper(
-        fetchHelper({
-          url: process.env.REACT_APP_VALIDATE_EMAIL,
-          method: "post",
-          body: { email: email.value }
-        }),
-        {
-          apiCallStart: () => setIsLoading(true),
-          apiCallSuccess: res => {
-            if (res.success) {
-              setIsLoading(false);
-              email.setFeedbackMsgAndValidation("이메일을 확인해주세요", true);
-            } else {
-              email.setFeedbackMsgAndValidation("이미 사용중인 이메일 입니다");
-            }
-          },
-          apiCallFailure: () => setIsError(true)
-        }
-      );
+      apiCallHelper(authApi.validateEmailFetcher({ email: email.value }), {
+        apiCallStart: () => setIsLoading(true),
+        apiCallSuccess: res => {
+          if (res.success) {
+            setIsLoading(false);
+            email.setFeedbackMsgAndValidation("이메일을 확인해주세요", true);
+          } else {
+            email.setFeedbackMsgAndValidation("이미 사용중인 이메일 입니다");
+          }
+        },
+        apiCallFailure: () => setIsError(true)
+      });
     }
   };
 
@@ -80,10 +73,9 @@ const EmailValidation = props => {
     if (validationCodeValValidation) {
       validationCode.setFeedbackMsgAndValidation("잠시만 기다려주세요", true);
       apiCallHelper(
-        fetchHelper({
-          url: process.env.REACT_APP_VALIDATE_VALIDATION_CODE,
-          method: "post",
-          body: { email: email.value, validationCode: validationCode.value }
+        authApi.validateValidationCodeFetcher({
+          email: email.value,
+          validationCode: validationCode.value
         }),
         {
           apiCallStart: () => setIsLoading(true),
