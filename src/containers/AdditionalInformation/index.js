@@ -2,7 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import AdditionalInformationComponents from "../../components/AdditionalInformationComponents";
 import { useValidateInput } from "../../customHooks";
-import fetchHelper from "../../helper/fetchHelper";
+import apiCallHelper from "../../helper/apiCallHelper";
+import * as authApi from "../../api/authApi";
 
 const AdditionalInformation = props => {
   const {
@@ -112,17 +113,13 @@ const AdditionalInformation = props => {
   const validateAdditionalInputsAndSignIn = () => {
     const inputsValidation = validateAdditionalInputs();
     if (inputsValidation) {
-      fetchHelper(
-        {
-          url: process.env.REACT_APP_SIGN_UP,
-          method: "post",
-          body: {
-            id: id.value,
-            email: emailForRequestBody,
-            nickName: nickName.value,
-            password: password.value
-          }
-        },
+      apiCallHelper(
+        authApi.signUpFetcher({
+          id: id.value,
+          email: emailForRequestBody,
+          nickName: nickName.value,
+          password: password.value
+        }),
         {
           apiCallStart: () => setIsLoading(true),
           apiCallSuccess: res => {
