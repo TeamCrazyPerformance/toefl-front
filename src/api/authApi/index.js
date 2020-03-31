@@ -2,7 +2,7 @@ import fetchHelper from "../../helper/fetchHelper";
 
 export const signInFetcher = ({ id, password }) => {
   return fetchHelper({
-    url: process.env.REACT_APP_SIGN_IN_URL,
+    url: `${process.env.REACT_APP_TOEFL_SERVER_URL}/login`,
     method: "post",
     body: { id, password }
   }).then(responseJson => {
@@ -20,7 +20,7 @@ export const signInFetcher = ({ id, password }) => {
 
 export const validateEmailFetcher = ({ email }) => {
   return fetchHelper({
-    url: process.env.REACT_APP_VALIDATE_EMAIL,
+    url: `${process.env.REACT_APP_TOEFL_SERVER_URL}/user/email`,
     method: "post",
     body: { email }
   }).then(responseJson => {
@@ -32,7 +32,7 @@ export const validateEmailFetcher = ({ email }) => {
 
 export const validateValidationCodeFetcher = ({ email, validationCode }) => {
   return fetchHelper({
-    url: process.env.REACT_APP_VALIDATE_VALIDATION_CODE,
+    url: `${process.env.REACT_APP_TOEFL_SERVER_URL}/user/email/validation`,
     method: "post",
     body: { email, validationCode }
   }).then(responseJson => {
@@ -44,7 +44,7 @@ export const validateValidationCodeFetcher = ({ email, validationCode }) => {
 
 export const signUpFetcher = ({ id, email, nickName, password }) => {
   return fetchHelper({
-    url: process.env.REACT_APP_SIGN_UP,
+    url: `${process.env.REACT_APP_TOEFL_SERVER_URL}/user`,
     method: "post",
     body: {
       id,
