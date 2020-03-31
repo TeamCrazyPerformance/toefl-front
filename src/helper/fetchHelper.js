@@ -1,49 +1,32 @@
 import * as jwtHelper from "./jwtHelper";
 
-const customHeader = () => {
-  if (jwtHelper.getJwt()) {
-    return {
-      "Content-Type": "application/json",
-      Accept: "application/json",
-      Authorization: "Bearer ".concat(jwtHelper.getJwt())
-    };
-  }
-
-  return {
+const makeCustomHeader = jwt => {
+  const customHeader = {
     "Content-Type": "application/json",
     Accept: "application/json"
   };
+
+  if (jwt) customHeader.Authorization = "Bearer ".concat(jwt);
+
+  return customHeader;
 };
 
-const USE_FETCH_PAYLOAD = {
+const API_CALL_PAYLOAD = {
   url: "",
   method: "",
   body: {}
 };
 
-const USE_FETCH_LIFE_CYCLE = {
-  apiCallPending: () => {},
-  apiCallSuccess: () => {},
-  // Api call failure means server error not response error
-  apiCallFailure: () => {}
-};
-
 // Make http request with fetch api.
-const fetchHelper = (
-  payload = USE_FETCH_PAYLOAD,
-  lifeCycle = USE_FETCH_LIFE_CYCLE
-) => {
-  return fetch(`${payload.url}`, {
-    headers: customHeader(),
+const fetchHelper = (payload = API_CALL_PAYLOAD) => {
+  return fetch(payload.url, {
+    headers: makeCustomHeader(jwtHelper.getJwt()),
     method: payload.method,
     body: JSON.stringify(payload.body)
-  })
-    .then(response => {
-      if (response.ok) return response.json();
-      return new Error("Server error");
-    })
-    .then(responseJson => lifeCycle.apiCallSuccess(responseJson))
-    .catch(() => lifeCycle.apiCallFailure());
+  }).then(response => {
+    if (response.ok) return response.json();
+    return new Error("Server error");
+  });
 };
 
 export default fetchHelper;
