@@ -9,10 +9,28 @@ const AppRouter = () => {
     <Router>
       <ScrollOnTopHelper />
       <Switch>
-        <PublicRouter restricted component={SignIn} path="/" exact />
-        <PublicRouter restricted component={SignUp} path="/signup" exact />
-        <PrivateRouter component={Main} path="/main" exact />
-        <PrivateRouter component={MyInformation} path="/myinformation" exact />
+        <PublicRouter
+          restricted
+          component={SignIn}
+          path={process.env.REACT_APP_SIGN_IN_URL}
+          exact
+        />
+        <PublicRouter
+          restricted
+          component={SignUp}
+          path={process.env.REACT_APP_SIGN_UP_URL}
+          exact
+        />
+        <PrivateRouter
+          component={Main}
+          path={process.env.REACT_APP_MAIN_URL}
+          exact
+        />
+        <PrivateRouter
+          component={MyInformation}
+          path={process.env.REACT_APP_MY_INFORMATION_URL}
+          exact
+        />
         <PublicRouter restricted={false} component={NotFound} key="notfound" />
       </Switch>
     </Router>
