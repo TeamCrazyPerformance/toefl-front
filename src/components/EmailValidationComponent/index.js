@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
+import { useValidateInput } from "../../customHooks";
 
 const EmailValidationComponentStyles = makeStyles(() => ({
   wrapper: {
@@ -36,20 +37,7 @@ const EmailValidationComponentStyles = makeStyles(() => ({
 }));
 
 const EmailValidationComponent = props => {
-  const {
-    email,
-    emailValidation,
-    emailFeedbackMsg,
-    updateAndValidateEmail,
-    validateAndSendEmail,
-    validationCode,
-    validationCodeValidation,
-    validationCodeFeedbackMsg,
-    updateAndValidateValidationCode,
-    validateAndSubmitValidationCode,
-    cancelUrl
-  } = props;
-
+  const { sendEmail, submitValidationCode } = props;
   const {
     wrapper,
     title,
@@ -58,6 +46,64 @@ const EmailValidationComponent = props => {
     validationButtonWapper,
     cancelButtonWrapper
   } = EmailValidationComponentStyles();
+  const email = useValidateInput("", [
+    {
+      validate: val => !(val === ""),
+      validationFalse: "이메일을 입력해주세요"
+    },
+    {
+      validate: val => /^[A-Za-z0-9+]*(@seoultech.ac.kr)$/.test(val),
+      validationFalse: "서울과학기술대학교 이메일을 입력해주세요"
+    }
+  ]);
+  const validationCode = useValidateInput("", [
+    {
+      validate: val => !(val === ""),
+      validationFalse: "인증번호를 입력해주세요"
+    }
+  ]);
+
+  const updateAndValidateEmail = event => {
+    email.setValue(event.target.value);
+    email.validateAndSetFeedBackMsg(event.target.value);
+  };
+
+  const updateAndValidateValidationCode = event => {
+    validationCode.setValue(event.target.value);
+    validationCode.validateAndSetFeedBackMsg(event.target.value);
+  };
+
+  const validateAndSendEmail = () => {
+    if (email.validateAndSetFeedBackMsg()) {
+      sendEmail({
+        setPendingFeedBackMsg: () =>
+          email.setFeedbackMsgAndValidation("잠시만 기다려주세요", true),
+        setSuccessFeedBackMsg: () =>
+          email.setFeedbackMsgAndValidation("이메일을 확인해주세요", true),
+        setFailFeedBackMsg: () =>
+          email.setFeedbackMsgAndValidation("이미 사용중인 이메일 입니다"),
+        email
+      });
+    }
+  };
+
+  const validateAndSubmitValidationCode = () => {
+    if (validationCode.validateAndSetFeedBackMsg()) {
+      submitValidationCode({
+        setPendingFeedBackMsg: () =>
+          validationCode.setFeedbackMsgAndValidation(
+            "잠시만 기다려주세요",
+            true
+          ),
+        setFailFeedBackMsg: () =>
+          validationCode.setFeedbackMsgAndValidation(
+            "코드가 올바르지 않습니다"
+          ),
+        email,
+        validationCode
+      });
+    }
+  };
 
   return (
     <div className={wrapper}>
@@ -67,10 +113,10 @@ const EmailValidationComponent = props => {
           <TextField
             label="Email"
             type="string"
-            value={email}
+            value={email.value}
             onChange={updateAndValidateEmail}
-            error={!emailValidation}
-            helperText={emailFeedbackMsg || " "}
+            error={!email.validation}
+            helperText={email.feedbackMsg || " "}
             fullWidth
           />
         </div>
@@ -90,10 +136,10 @@ const EmailValidationComponent = props => {
           <TextField
             label="Validation code"
             type="string"
-            value={validationCode}
+            value={validationCode.value}
             onChange={updateAndValidateValidationCode}
-            error={!validationCodeValidation}
-            helperText={validationCodeFeedbackMsg || " "}
+            error={!validationCode.validation}
+            helperText={validationCode.feedbackMsg || " "}
             fullWidth
           />
         </div>
@@ -113,7 +159,7 @@ const EmailValidationComponent = props => {
           variant="contained"
           color="primary"
           component={Link}
-          to={cancelUrl}
+          to={process.env.REACT_APP_MAIN_URL}
           fullWidth
         >
           가입취소
@@ -124,17 +170,8 @@ const EmailValidationComponent = props => {
 };
 
 EmailValidationComponent.propTypes = {
-  email: PropTypes.string.isRequired,
-  emailValidation: PropTypes.bool.isRequired,
-  emailFeedbackMsg: PropTypes.string.isRequired,
-  updateAndValidateEmail: PropTypes.func.isRequired,
-  validateAndSendEmail: PropTypes.func.isRequired,
-  validationCode: PropTypes.string.isRequired,
-  validationCodeValidation: PropTypes.bool.isRequired,
-  validationCodeFeedbackMsg: PropTypes.string.isRequired,
-  updateAndValidateValidationCode: PropTypes.func.isRequired,
-  validateAndSubmitValidationCode: PropTypes.func.isRequired,
-  cancelUrl: PropTypes.string.isRequired
+  sendEmail: PropTypes.func.isRequired,
+  submitValidationCode: PropTypes.func.isRequired
 };
 
 export default EmailValidationComponent;
