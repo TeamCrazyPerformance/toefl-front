@@ -1,35 +1,16 @@
 import { useState } from "react";
 
 const VALIDATION_INIT_OPTION = {
-  validation: true,
+  validate: () => true,
   validatePending: "",
   validationTrue: "",
   validationFalse: "값을 입력해주세요"
 };
 
-const useValidateInput = (initVal = "") => {
+const useValidateInput = (initVal = "", options = [VALIDATION_INIT_OPTION]) => {
   const [value, setValue] = useState(initVal);
   const [feedbackMsg, setFeedbackMsg] = useState("");
   const [validation, setValidation] = useState(true);
-
-  const validateForm = (option = VALIDATION_INIT_OPTION) => {
-    setFeedbackMsg(option.validatePending || "");
-    if (option.validation) {
-      setFeedbackMsg(option.validationTrue || "");
-      return true;
-    }
-    setFeedbackMsg(option.validationFalse || "");
-    return false;
-  };
-
-  const validate = (options = [VALIDATION_INIT_OPTION]) => {
-    let tempValidation = true;
-    options.forEach(option => {
-      if (tempValidation) tempValidation = validateForm(option);
-    });
-    setValidation(tempValidation);
-    return tempValidation;
-  };
 
   const setFeedbackMsgAndValidation = (
     newFeedbackMsg = "",
@@ -39,13 +20,32 @@ const useValidateInput = (initVal = "") => {
     setValidation(newValidation);
   };
 
+  const validateForm = (option = VALIDATION_INIT_OPTION, val) => {
+    setFeedbackMsg(option.validatePending || "");
+    if (option.validate(val)) {
+      setFeedbackMsg(option.validationTrue || "");
+      return true;
+    }
+    setFeedbackMsg(option.validationFalse || "");
+    return false;
+  };
+
+  const validateAndSetFeedBackMsg = (val = value) => {
+    let tempValidation = true;
+    options.forEach(option => {
+      if (tempValidation) tempValidation = validateForm(option, val);
+    });
+    setValidation(tempValidation);
+    return tempValidation;
+  };
+
   return {
     value,
     setValue,
     feedbackMsg,
     setFeedbackMsgAndValidation,
     validation,
-    validate
+    validateAndSetFeedBackMsg
   };
 };
 

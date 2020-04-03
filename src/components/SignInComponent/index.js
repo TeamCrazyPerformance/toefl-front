@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
+import { useValidateInput } from "../../customHooks";
 
 const SignInComponentStyles = makeStyles(() => ({
   wrapper: {
@@ -28,25 +29,60 @@ const SignInComponentStyles = makeStyles(() => ({
 }));
 
 const SignInComponent = props => {
-  const {
-    id,
-    idValidation,
-    idFeedbackMsg,
-    updateAndValidateId,
-    password,
-    passowrdValidation,
-    passwordFeedbackMsg,
-    updateAndValidatePassword,
-    validateInputsAndSignIn,
-    signUpPageUrl
-  } = props;
-
+  const { signIn } = props;
   const {
     wrapper,
     title,
     textFieldWapper,
     buttonWapper
   } = SignInComponentStyles();
+  const id = useValidateInput("", [
+    {
+      validate: val => !(val === ""),
+      validationFalse: "아이디를 입력해 주세요"
+    }
+  ]);
+  const password = useValidateInput("", [
+    {
+      validate: val => !(val === ""),
+      validationFalse: "비밀번호를 입력해 주세요"
+    }
+  ]);
+
+  const updateAndValidateId = event => {
+    id.setValue(event.target.value);
+    id.validateAndSetFeedBackMsg(event.target.value);
+  };
+
+  const updateAndValidatePassword = event => {
+    password.setValue(event.target.value);
+    password.validateAndSetFeedBackMsg(event.target.value);
+  };
+
+  const validateInputs = () => {
+    const idValidation = id.validateAndSetFeedBackMsg();
+    const passwordValidation = password.validateAndSetFeedBackMsg();
+
+    return idValidation && passwordValidation;
+  };
+
+  const setFeedBackMsg = () => {
+    id.setFeedbackMsgAndValidation("아이디 혹은 비밀번호 오류입니다", false);
+    password.setFeedbackMsgAndValidation(
+      "아이디 혹은 비밀번호 오류입니다",
+      false
+    );
+  };
+
+  const validateInputsAndSignIn = () => {
+    if (validateInputs()) {
+      signIn({
+        id: id.value,
+        password: password.value,
+        setFeedBackMsg
+      });
+    }
+  };
 
   return (
     <div className={wrapper}>
@@ -55,10 +91,10 @@ const SignInComponent = props => {
         <TextField
           label="Id"
           type="string"
-          value={id}
+          value={id.value}
           onChange={updateAndValidateId}
-          error={!idValidation}
-          helperText={idFeedbackMsg || " "}
+          error={!id.validation}
+          helperText={id.feedbackMsg || " "}
           fullWidth
         />
       </div>
@@ -66,10 +102,10 @@ const SignInComponent = props => {
         <TextField
           label="Password"
           type="password"
-          value={password}
+          value={password.value}
           onChange={updateAndValidatePassword}
-          error={!passowrdValidation}
-          helperText={passwordFeedbackMsg || " "}
+          error={!password.validation}
+          helperText={password.feedbackMsg || " "}
           fullWidth
         />
       </div>
@@ -88,7 +124,7 @@ const SignInComponent = props => {
           variant="contained"
           color="primary"
           component={Link}
-          to={signUpPageUrl}
+          to={process.env.REACT_APP_SIGN_UP_URL}
           fullWidth
         >
           회원가입
@@ -99,16 +135,7 @@ const SignInComponent = props => {
 };
 
 SignInComponent.propTypes = {
-  id: PropTypes.string.isRequired,
-  idValidation: PropTypes.bool.isRequired,
-  idFeedbackMsg: PropTypes.string.isRequired,
-  updateAndValidateId: PropTypes.func.isRequired,
-  password: PropTypes.string.isRequired,
-  passowrdValidation: PropTypes.bool.isRequired,
-  passwordFeedbackMsg: PropTypes.string.isRequired,
-  updateAndValidatePassword: PropTypes.func.isRequired,
-  validateInputsAndSignIn: PropTypes.func.isRequired,
-  signUpPageUrl: PropTypes.string.isRequired
+  signIn: PropTypes.func.isRequired
 };
 
 export default SignInComponent;
