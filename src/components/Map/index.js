@@ -42,6 +42,10 @@ const Map = props => {
     return newMapMarkers;
   };
 
+  const createMap = (ref, mapOption) => {
+    return new window.google.maps.Map(ref, mapOption);
+  };
+
   useEffect(() => {
     removeMapMarkers();
     setMapMarkers(createMapMarkers(places));
@@ -49,10 +53,8 @@ const Map = props => {
 
   useEffect(() => {
     if (!window.google) return;
-    const map = new window.google.maps.Map(mapRef.current, MAP_OPTION);
-    map.addListener("dragend", () => {
-      searchPlaceNearBy(map);
-    });
+    const map = createMap(mapRef.current, MAP_OPTION);
+    map.addListener("dragend", () => searchPlaceNearBy(map));
     searchPlaceNearBy(map);
     setMapInstance(map);
   }, []);
