@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 const PrivateRoute = props => {
   const { component, path, exact, isSignIn } = props;
   return isSignIn ? (
-    <Route path={path} key={path} exact={exact} comopnent={component} />
+    <Route path={path} key={path} exact={exact} component={component} />
   ) : (
     <Redirect to="/" />
   );
