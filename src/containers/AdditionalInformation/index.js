@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import AdditionalInformationComponents from "../../components/AdditionalInformationComponents";
-import apiCallHelper from "../../helper/apiCallHelper";
 import * as authApi from "../../api/authApi";
 
 const AdditionalInformation = props => {
@@ -14,25 +13,23 @@ const AdditionalInformation = props => {
     nickName,
     password
   }) => {
-    apiCallHelper(
-      authApi.signUpFetcher({
-        id,
-        email: emailForRequestBody,
-        nickName,
-        password
-      }),
-      {
-        apiCallStart: () => setIsLoading(true),
-        apiCallSuccess: res => {
-          if (res.success) {
-            pageChange();
-          } else {
-            setFailFeedbackMsg();
-          }
-        },
-        apiCallFailure: () => setIsError(true)
-      }
-    );
+    Promise.resolve(() => setIsLoading(true))
+      .then(() =>
+        authApi.fetchSignUp({
+          id,
+          email: emailForRequestBody,
+          nickName,
+          password
+        })
+      )
+      .then(res => {
+        if (res.success) {
+          pageChange();
+        } else {
+          setFailFeedbackMsg();
+        }
+      })
+      .catch(() => setIsError(true));
   };
 
   return <AdditionalInformationComponents signUp={signUp} />;
