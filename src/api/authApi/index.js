@@ -1,50 +1,34 @@
 import fetchHelper from "../../helper/fetchHelper";
 
-export const signInFetcher = ({ id, password }) => {
+const serverUrl = process.env.REACT_APP_TOEFL_SERVER_URL;
+
+export const fetchSignIn = ({ id, password }) => {
   return fetchHelper({
-    url: `${process.env.REACT_APP_TOEFL_SERVER_URL}/login`,
+    url: `${serverUrl}/login`,
     method: "post",
     body: { id, password }
-  }).then(responseJson => {
-    return {
-      success: responseJson.success,
-      token: responseJson.token,
-      userInformation: {
-        id: responseJson.userInformation.id,
-        email: responseJson.userInformation.email,
-        nickName: responseJson.userInformation.nickName
-      }
-    };
-  });
+  }).then(responseJson => responseJson);
 };
 
-export const validateEmailFetcher = ({ email }) => {
+export const fetchValidateEmail = ({ email }) => {
   return fetchHelper({
-    url: `${process.env.REACT_APP_TOEFL_SERVER_URL}/user/email`,
+    url: `${serverUrl}/user/email`,
     method: "post",
     body: { email }
-  }).then(responseJson => {
-    return {
-      success: responseJson.success
-    };
-  });
+  }).then(responseJson => responseJson);
 };
 
-export const validateValidationCodeFetcher = ({ email, validationCode }) => {
+export const fetchValidateValidationCode = ({ email, validationCode }) => {
   return fetchHelper({
-    url: `${process.env.REACT_APP_TOEFL_SERVER_URL}/user/email/validation`,
+    url: `${serverUrl}/user/email/validation`,
     method: "post",
     body: { email, validationCode }
-  }).then(responseJson => {
-    return {
-      success: responseJson.success
-    };
-  });
+  }).then(responseJson => responseJson);
 };
 
-export const signUpFetcher = ({ id, email, nickName, password }) => {
+export const fetchSignUp = ({ id, email, nickName, password }) => {
   return fetchHelper({
-    url: `${process.env.REACT_APP_TOEFL_SERVER_URL}/user`,
+    url: `${serverUrl}/user`,
     method: "post",
     body: {
       id,
@@ -52,9 +36,5 @@ export const signUpFetcher = ({ id, email, nickName, password }) => {
       nickName,
       password
     }
-  }).then(responseJson => {
-    return {
-      success: responseJson.success
-    };
-  });
+  }).then(responseJson => responseJson);
 };

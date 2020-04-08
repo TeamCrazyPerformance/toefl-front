@@ -1,7 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import EmailValidationComponent from "../../components/EmailValidationComponent";
-import apiCallHelper from "../../helper/apiCallHelper";
 import * as authApi from "../../api/authApi";
 
 const EmailValidation = props => {
@@ -18,10 +17,10 @@ const EmailValidation = props => {
     setFailFeedBackMsg,
     email
   }) => {
-    setPendingFeedBackMsg();
-    apiCallHelper(authApi.validateEmailFetcher({ email }), {
-      apiCallStart: () => setIsLoading(true),
-      apiCallSuccess: res => {
+    Promise.resolve(() => setPendingFeedBackMsg())
+      .then(() => setIsLoading(true))
+      .then(() => authApi.fetchValidateEmail({ email }))
+      .then(res => {
         if (res.success) {
           setIsLoading(false);
           setEmailForRequestBody(email);
@@ -29,9 +28,8 @@ const EmailValidation = props => {
         } else {
           setFailFeedBackMsg();
         }
-      },
-      apiCallFailure: () => setIsError(true)
-    });
+      })
+      .catch(() => setIsError(true));
   };
 
   const submitValidationCode = ({
@@ -40,26 +38,24 @@ const EmailValidation = props => {
     email,
     validationCode
   }) => {
-    setPendingFeedBackMsg();
-    apiCallHelper(
-      authApi.validateValidationCodeFetcher({
-        email: email.value,
-        validationCode: validationCode.value
-      }),
-      {
-        apiCallStart: () => setIsLoading(true),
-        apiCallSuccess: res => {
-          if (res.success) {
-            setIsLoading(false);
-            setEmailForRequestBody(email.value);
-            setEmailValidation(true);
-          } else {
-            setFailFeedBackMsg();
-          }
-        },
-        apiCallFailure: () => setIsError(true)
-      }
-    );
+    Promise.resolve(() => setPendingFeedBackMsg())
+      .then(() => setIsLoading(true))
+      .then(() =>
+        authApi.fetchValidateValidationCode({
+          email: email.value,
+          validationCode: validationCode.value
+        })
+      )
+      .then(res => {
+        if (res.success) {
+          setIsLoading(false);
+          setEmailForRequestBody(email.value);
+          setEmailValidation(true);
+        } else {
+          setFailFeedBackMsg();
+        }
+      })
+      .catch(() => setIsError(true));
   };
 
   return (
