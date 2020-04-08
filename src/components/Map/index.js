@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 
 const MAP_OPTION = {
   zoom: 15,
-  center: { lat: 37.6347813, lng: 127.0793528 }
+  center: { lat: 37.6347813, lng: 127.0793528 },
+  zoomControl: false,
+  mapTypeControl: false
 };
 
 const Map = props => {
