@@ -4,6 +4,8 @@ import PageError from "../PageError";
 import Map from "../../components/Map";
 // import Sidebar from "../../components/Sidebar";
 
+const googleApiUrl = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}&libraries=places`;
+
 const Main = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
@@ -13,13 +15,14 @@ const Main = () => {
 
   const searchPlaceNearBy = mapInstance => {
     const service = new window.google.maps.places.PlacesService(mapInstance);
+    const searchRadius = 4000 / mapInstance.zoom;
     service.nearbySearch(
       {
         location: {
           lat: mapInstance.center.lat(),
           lng: mapInstance.center.lng()
         },
-        radius: 4000 / mapInstance.zoom,
+        radius: searchRadius,
         type: ["restaurant"]
       },
       (results, status) => {
@@ -57,9 +60,7 @@ const Main = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    getScript(
-      `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}&libraries=places`
-    )
+    getScript(googleApiUrl)
       .then(() => {
         setIsLoading(false);
       })

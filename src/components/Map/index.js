@@ -1,5 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import PropTypes from "prop-types";
+
+const MAP_OPTION = {
+  zoom: 15,
+  center: { lat: 37.6347813, lng: 127.0793528 }
+};
 
 const Map = props => {
   const {
@@ -8,6 +13,7 @@ const Map = props => {
     setHoveredPlaceId,
     setFocusedPlaceId
   } = props;
+  const mapRef = useRef(null);
   const [mapInstance, setMapInstance] = useState({});
   const [mapMarkers, setMapMarkers] = useState([]);
 
@@ -42,28 +48,17 @@ const Map = props => {
   }, [places]);
 
   useEffect(() => {
-    if (window.google) {
-      setMapInstance(
-        (() => {
-          const map = new window.google.maps.Map(
-            document.getElementById("map"),
-            {
-              zoom: 15,
-              center: { lat: 37.6347813, lng: 127.0793528 }
-            }
-          );
-          map.addListener("dragend", () => {
-            searchPlaceNearBy(map);
-          });
-          searchPlaceNearBy(map);
-          return map;
-        })()
-      );
-    }
+    if (!window.google) return;
+    const map = new window.google.maps.Map(mapRef.current, MAP_OPTION);
+    map.addListener("dragend", () => {
+      searchPlaceNearBy(map);
+    });
+    searchPlaceNearBy(map);
+    setMapInstance(map);
   }, []);
 
   return (
-    <div id="map" style={{ height: "100vh", width: "100%" }}>
+    <div id="map" ref={mapRef} style={{ height: "100vh", width: "100%" }}>
       Google map
     </div>
   );
