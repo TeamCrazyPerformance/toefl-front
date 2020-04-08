@@ -1,67 +1,87 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
+import LoadingSpinner from "../../components/LoadingSpinner";
+import PageError from "../PageError";
 import Map from "../../components/Map";
-import Sidebar from "../../components/Sidebar";
+// import Sidebar from "../../components/Sidebar";
 
 const Main = () => {
-  const [center, setCenter] = useState({
-    lat: 37.6347813,
-    lng: 127.0793528
-  });
-  const [zoom, setZoom] = useState(14);
-  const [places, setPlaces] = useState([
-    {
-      id: "",
-      text: "",
-      lat: 0,
-      lng: 0
-    }
-  ]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [places, setPlaces] = useState([]);
+  const [hoveredPlaceId, setHoveredPlaceId] = useState("");
   const [focusedPlaceId, setFocusedPlaceId] = useState("");
 
-  useMemo(() => {
-    setPlaces([
+  const searchPlaceNearBy = mapInstance => {
+    const service = new window.google.maps.places.PlacesService(mapInstance);
+    service.nearbySearch(
       {
-        id: "A",
-        text: "A",
-        lat: 37.6357224,
-        lng: 127.0793213
+        location: {
+          lat: mapInstance.center.lat(),
+          lng: mapInstance.center.lng()
+        },
+        radius: 4000 / mapInstance.zoom,
+        type: ["restaurant"]
       },
-      {
-        id: "B",
-        text: "B",
-        lat: 37.6467314,
-        lng: 127.0793342
-      },
-      {
-        id: "C",
-        text: "C",
-        lat: 37.6577121,
-        lng: 127.0793132
-      },
-      {
-        id: "D",
-        text: "D",
-        lat: 37.66878414,
-        lng: 127.0793443
+      (results, status) => {
+        if (status !== "OK") return;
+
+        const newPlaces = results.map(place => {
+          return {
+            name: place.name,
+            placeId: place.place_id,
+            location: {
+              lat: place.geometry.location.lat(),
+              lng: place.geometry.location.lng()
+            }
+          };
+        });
+        setPlaces([...newPlaces]);
       }
-    ]);
-  }, [center, zoom]);
+    );
+  };
+
+  const getScript = url => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+
+      script.src = `${url}`;
+      script.async = true;
+      script.defer = true;
+
+      script.addEventListener("load", () => resolve());
+      script.addEventListener("error", e => reject(e));
+
+      document.body.appendChild(script);
+    });
+  };
+
+  useEffect(() => {
+    setIsLoading(true);
+    getScript(
+      `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}&libraries=places`
+    )
+      .then(() => {
+        setIsLoading(false);
+      })
+      .catch(() => setIsError(true));
+  }, []);
 
   return (
-    <div>
-      <Map
-        setCenter={setCenter}
-        setZoom={setZoom}
-        places={places}
-        setFocusedPlaceId={setFocusedPlaceId}
-        defaultCenter={{
-          lat: 37.6347813,
-          lng: 127.0793528
-        }}
-        defaultZoom={14}
-      />
-      {/* <Sidebar /> */}
-    </div>
+    <LoadingSpinner loadingState={isLoading}>
+      {isError ? (
+        <PageError />
+      ) : (
+        <>
+          <Map
+            places={places}
+            searchPlaceNearBy={searchPlaceNearBy}
+            setHoveredPlaceId={setHoveredPlaceId}
+            setFocusedPlaceId={setFocusedPlaceId}
+          />
+          {/* <Sidebar /> */}
+        </>
+      )}
+    </LoadingSpinner>
   );
 };
 

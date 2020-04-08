@@ -1,114 +1,88 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
-import GoogleMapReact from "google-map-react";
-import PlacePin from "../PlacePin";
 
 const Map = props => {
   const {
-    setCenter,
-    setZoom,
     places,
-    setFocusedPlaceId,
-    defaultCenter,
-    defaultZoom
+    searchPlaceNearBy,
+    setHoveredPlaceId,
+    setFocusedPlaceId
   } = props;
+  const [mapInstance, setMapInstance] = useState({});
+  const [mapMarkers, setMapMarkers] = useState([]);
 
-  const [hover, setHover] = useState(false);
-  const [hoveredPlace, setHoveredPlace] = useState({
-    id: "",
-    text: "",
-    lat: 0,
-    lng: 0
-  });
-
-  const onBoundsChange = (newcenter, newZoom) => {
-    setCenter(newcenter);
-    setZoom(newZoom);
+  const removeMapMarkers = () => {
+    mapMarkers.forEach(mapMarker => mapMarker.setMap(null));
+    setMapMarkers([]);
   };
 
-  const onChildClick = key => {
-    setFocusedPlaceId(key);
-  };
-
-  const onChildMouseEnter = (key, childProps) => {
-    setHover(true);
-    setHoveredPlace(childProps);
-  };
-
-  const onChildMouseLeave = () => {
-    setHover(false);
-    setHoveredPlace({
-      id: "",
-      key: "",
-      text: "",
-      lat: 0,
-      lng: 0
+  const createMapMarkers = newPlaces => {
+    const newMapMarkers = newPlaces.map(place => {
+      const placeMarker = new window.google.maps.Marker({
+        position: {
+          lat: place.location.lat,
+          lng: place.location.lng
+        },
+        map: mapInstance
+      });
+      placeMarker.addListener("hover", () => {
+        setHoveredPlaceId(place.placeId);
+      });
+      placeMarker.addListener("click", () => {
+        setFocusedPlaceId(place.placeId);
+      });
+      return placeMarker;
     });
+    return newMapMarkers;
   };
+
+  useEffect(() => {
+    removeMapMarkers();
+    setMapMarkers(createMapMarkers(places));
+  }, [places]);
+
+  useEffect(() => {
+    if (window.google) {
+      setMapInstance(
+        (() => {
+          const map = new window.google.maps.Map(
+            document.getElementById("map"),
+            {
+              zoom: 15,
+              center: { lat: 37.6347813, lng: 127.0793528 }
+            }
+          );
+          map.addListener("dragend", () => {
+            searchPlaceNearBy(map);
+          });
+          searchPlaceNearBy(map);
+          return map;
+        })()
+      );
+    }
+  }, []);
 
   return (
-    <div style={{ height: "100vh", width: "100%" }}>
-      <GoogleMapReact
-        bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAP_API_KEY }}
-        defaultCenter={defaultCenter}
-        defaultZoom={defaultZoom}
-        hoverDistance={20}
-        onBoundsChange={onBoundsChange}
-        onChildClick={onChildClick}
-        onChildMouseEnter={onChildMouseEnter}
-        onChildMouseLeave={onChildMouseLeave}
-      >
-        {places.map(place => (
-          <PlacePin key={place.id} lat={place.lat} lng={place.lng} />
-        ))}
-        {hover ? (
-          <PlacePin
-            key={hoveredPlace.id}
-            lat={hoveredPlace.lat}
-            lng={hoveredPlace.lng}
-            color="blue"
-          />
-        ) : (
-          <></>
-        )}
-      </GoogleMapReact>
+    <div id="map" style={{ height: "100vh", width: "100%" }}>
+      Google map
     </div>
   );
 };
 
 Map.propTypes = {
-  setCenter: PropTypes.func.isRequired,
-  setZoom: PropTypes.func.isRequired,
   places: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      text: PropTypes.string.isRequired,
-      lat: PropTypes.number.isRequired,
-      lng: PropTypes.number.isRequired
+      name: PropTypes.string.isRequired,
+      placeId: PropTypes.string.isRequired,
+      location: PropTypes.shape({
+        lat: PropTypes.number.isRequired,
+        lng: PropTypes.number.isRequired
+      }).isRequired
     })
-  ),
-  setFocusedPlaceId: PropTypes.func.isRequired,
-  defaultCenter: PropTypes.shape({
-    lat: PropTypes.number.isRequired,
-    lng: PropTypes.number.isRequired
-  }),
-  defaultZoom: PropTypes.number
-};
-
-Map.defaultProps = {
-  defaultCenter: {
-    lat: 37.6347813,
-    lng: 127.0793528
-  },
-  places: [
-    {
-      id: "",
-      text: "",
-      lat: 37.6347813,
-      lng: 127.0793528
-    }
-  ],
-  defaultZoom: 14
+  ).isRequired,
+  searchPlaceNearBy: PropTypes.func.isRequired,
+  setHoveredPlaceId: PropTypes.func.isRequired,
+  setFocusedPlaceId: PropTypes.func.isRequired
 };
 
 export default Map;
