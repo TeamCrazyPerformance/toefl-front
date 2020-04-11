@@ -17,44 +17,51 @@ const Map = props => {
   } = props;
   const mapRef = useRef(null);
   const [mapInstance, setMapInstance] = useState({});
-  const [mapMarkers, setMapMarkers] = useState([]);
 
-  const removeMapMarkers = () => {
-    mapMarkers.forEach(mapMarker => mapMarker.setMap(null));
-    setMapMarkers([]);
-  };
+  useEffect(() => {
+    const removeMapMarkers = markers => {
+      markers.forEach(marker => marker.setMap(null));
+    };
 
-  const createMapMarkers = newPlaces => {
-    const newMapMarkers = newPlaces.map(place => {
-      const placeMarker = new window.google.maps.Marker({
+    const createMapMarker = place => {
+      const mapMarker = new window.google.maps.Marker({
         position: {
           lat: place.location.lat,
           lng: place.location.lng
         },
         map: mapInstance
       });
-      placeMarker.addListener("hover", () => {
+
+      mapMarker.addListener("hover", () => {
         setHoveredPlaceId(place.placeId);
       });
-      placeMarker.addListener("click", () => {
+
+      mapMarker.addListener("click", () => {
         setFocusedPlaceId(place.placeId);
       });
-      return placeMarker;
-    });
-    return newMapMarkers;
-  };
 
-  const createMap = (ref, mapOption) => {
-    return new window.google.maps.Map(ref, mapOption);
-  };
+      return mapMarker;
+    };
 
-  useEffect(() => {
-    removeMapMarkers();
-    setMapMarkers(createMapMarkers(places));
-  }, [places]);
+    const createMapMarkers = newPlaces => {
+      const newMapMarkers = newPlaces.map(place => {
+        const mapMarker = createMapMarker(place);
+        return mapMarker;
+      });
+      return newMapMarkers;
+    };
+
+    const markers = createMapMarkers(places);
+
+    return () => removeMapMarkers(markers);
+  }, [places, mapInstance]);
 
   useEffect(() => {
     if (!window.google) return;
+    const createMap = (ref, mapOption) => {
+      return new window.google.maps.Map(ref, mapOption);
+    };
+
     const map = createMap(mapRef.current, MAP_OPTION);
     map.addListener("dragend", () => searchPlaceNearBy(map));
     searchPlaceNearBy(map);
