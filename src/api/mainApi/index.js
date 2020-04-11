@@ -1,22 +1,6 @@
 import fetchHelper from "../../helper/fetchHelper";
 
 const serverUrl = process.env.REACT_APP_TOEFL_SERVER_URL;
-const googleApiUrl = `https://maps.googleapis.com/maps/api/js?key=${process.env.REACT_APP_GOOGLE_MAP_API_KEY}&libraries=places`;
-
-export const fetchGoogleApiScript = () => {
-  return new Promise((resolve, reject) => {
-    const script = document.createElement("script");
-
-    script.src = `${googleApiUrl}`;
-    script.async = true;
-    script.defer = true;
-
-    script.addEventListener("load", () => resolve());
-    script.addEventListener("error", e => reject(e));
-
-    document.body.appendChild(script);
-  });
-};
 
 export const fetchPlaceNearBy = (mapInstance, searchRadius) => {
   return new Promise((resolve, reject) => {

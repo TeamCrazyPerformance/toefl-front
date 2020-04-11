@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import * as googleLib from "../../lib/googleLib";
 import * as mainApi from "../../api/mainApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import PageError from "../PageError";
@@ -35,8 +36,8 @@ const Main = () => {
 
   useEffect(() => {
     setIsLoading(true);
-    mainApi
-      .fetchGoogleApiScript()
+    googleLib
+      .fetchGoogleLib()
       .then(() => {
         setIsLoading(false);
       })
