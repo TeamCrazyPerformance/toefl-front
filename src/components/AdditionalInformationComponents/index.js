@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import { makeStyles } from "@material-ui/core/styles";
@@ -35,7 +35,7 @@ const AdditionalInformationComponentStyles = makeStyles(() => ({
 }));
 
 const AdditionalInformationComponent = props => {
-  const { signUp, history } = props;
+  const { signUp } = props;
 
   const {
     wrapper,
@@ -130,11 +130,25 @@ const AdditionalInformationComponent = props => {
   const validateAdditionalInputsAndSignIn = () => {
     if (validateInputs()) {
       signUp({
-        pageChange: () => history.push(process.env.REACT_APP_MAIN_URL),
-        setFailFeedbackMsg: () => {},
         id: id.value,
         nickName: nickName.value,
         password: password.value
+      }).then(response => {
+        if (!response) {
+          id.setFeedbackMsgAndValidation("회원가입에 실패했습니다", false);
+          nickName.setFeedbackMsgAndValidation(
+            "회원가입에 실패했습니다",
+            false
+          );
+          password.setFeedbackMsgAndValidation(
+            "회원가입에 실패했습니다",
+            false
+          );
+          passwordConfirm.setFeedbackMsgAndValidation(
+            "회원가입에 실패했습니다",
+            false
+          );
+        }
       });
     }
   };
@@ -210,10 +224,7 @@ const AdditionalInformationComponent = props => {
 };
 
 AdditionalInformationComponent.propTypes = {
-  signUp: PropTypes.func.isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired
-  }).isRequired
+  signUp: PropTypes.func.isRequired
 };
 
-export default withRouter(AdditionalInformationComponent);
+export default AdditionalInformationComponent;
