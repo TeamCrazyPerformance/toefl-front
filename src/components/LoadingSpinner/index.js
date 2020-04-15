@@ -4,29 +4,44 @@ import { makeStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 const LoadingSpinnerStyles = makeStyles(() => ({
-  loadingStateWrapper: {
+  loadingStateWrapperDisplay: {
     width: "100%",
     height: "100vh",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center"
+  },
+  loadingStateWrapperDisplayNone: {
+    display: "none"
+  },
+  childrenWapperDisplayNone: {
+    display: "none"
   }
 }));
 
 const LoadingSpinner = props => {
   const { loadingState, children } = props;
-  const { loadingStateWrapper } = LoadingSpinnerStyles();
+  const {
+    loadingStateWrapperDisplay,
+    loadingStateWrapperDisplayNone,
+    childrenWapperDisplayNone
+  } = LoadingSpinnerStyles();
 
   return (
     <>
-      {loadingState === true ? (
-        <div className={`${loadingStateWrapper}`}>
-          <CircularProgress />
-        </div>
-      ) : (
-        <>{children}</>
-      )}
+      <div
+        className={
+          loadingState
+            ? `${loadingStateWrapperDisplay}`
+            : `${loadingStateWrapperDisplayNone}`
+        }
+      >
+        <CircularProgress />
+      </div>
+      <div className={loadingState ? `${childrenWapperDisplayNone}` : ""}>
+        {children}
+      </div>
     </>
   );
 };
