@@ -11,49 +11,36 @@ const EmailValidation = props => {
     setIsError
   } = props;
 
-  const sendEmail = ({
-    setPendingFeedBackMsg,
-    setSuccessFeedBackMsg,
-    setFailFeedBackMsg,
-    email
-  }) => {
-    Promise.resolve(() => setPendingFeedBackMsg())
-      .then(() => setIsLoading(true))
-      .then(() => authApi.fetchValidateEmail({ email }))
+  const sendEmail = ({ email }) => {
+    setIsLoading(true);
+    return authApi
+      .fetchValidateEmail({ email })
       .then(res => {
+        setIsLoading(false);
         if (res.success) {
-          setIsLoading(false);
           setEmailForRequestBody(email);
-          setSuccessFeedBackMsg();
-        } else {
-          setFailFeedBackMsg();
+          return true;
         }
+        return false;
       })
       .catch(() => setIsError(true));
   };
 
-  const submitValidationCode = ({
-    setPendingFeedBackMsg,
-    setFailFeedBackMsg,
-    email,
-    validationCode
-  }) => {
-    Promise.resolve(() => setPendingFeedBackMsg())
-      .then(() => setIsLoading(true))
-      .then(() =>
-        authApi.fetchValidateValidationCode({
-          email: email.value,
-          validationCode: validationCode.value
-        })
-      )
+  const submitValidationCode = ({ email, validationCode }) => {
+    setIsLoading(true);
+    return authApi
+      .fetchValidateValidationCode({
+        email: email.value,
+        validationCode: validationCode.value
+      })
       .then(res => {
+        setIsLoading(false);
         if (res.success) {
-          setIsLoading(false);
           setEmailForRequestBody(email.value);
           setEmailValidation(true);
-        } else {
-          setFailFeedBackMsg();
+          return true;
         }
+        return false;
       })
       .catch(() => setIsError(true));
   };
