@@ -75,32 +75,24 @@ const EmailValidationComponent = props => {
 
   const validateAndSendEmail = () => {
     if (email.validateAndSetFeedBackMsg()) {
-      sendEmail({
-        setPendingFeedBackMsg: () =>
-          email.setFeedbackMsgAndValidation("잠시만 기다려주세요", true),
-        setSuccessFeedBackMsg: () =>
-          email.setFeedbackMsgAndValidation("이메일을 확인해주세요", true),
-        setFailFeedBackMsg: () =>
-          email.setFeedbackMsgAndValidation("이미 사용중인 이메일 입니다"),
-        email
+      sendEmail({ email }).then(response => {
+        if (response) {
+          email.setFeedbackMsgAndValidation("이메일을 확인해주세요", true);
+        } else {
+          email.setFeedbackMsgAndValidation("이미 사용중인 이메일 입니다");
+        }
       });
     }
   };
 
   const validateAndSubmitValidationCode = () => {
     if (validationCode.validateAndSetFeedBackMsg()) {
-      submitValidationCode({
-        setPendingFeedBackMsg: () =>
-          validationCode.setFeedbackMsgAndValidation(
-            "잠시만 기다려주세요",
-            true
-          ),
-        setFailFeedBackMsg: () =>
+      submitValidationCode({ email, validationCode }).then(response => {
+        if (!response) {
           validationCode.setFeedbackMsgAndValidation(
             "코드가 올바르지 않습니다"
-          ),
-        email,
-        validationCode
+          );
+        }
       });
     }
   };

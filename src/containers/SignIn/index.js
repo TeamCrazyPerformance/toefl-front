@@ -5,37 +5,29 @@ import { connect } from "react-redux";
 import * as authActions from "../../redux/auth/actions";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import * as authApi from "../../api/authApi";
-import PageError from "../PageError";
 import SignInComponent from "../../components/SignInComponent";
 
 const SignIn = props => {
   const { setUserInformationAndJwt } = props;
   const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
 
-  const signIn = ({ id, password, setFeedBackMsg }) => {
-    Promise.resolve(() => setIsLoading(true))
-      .then(() => authApi.fetchSignIn({ id, password }))
-      .then(response => {
-        setIsLoading(false);
-        if (response.success) {
-          setUserInformationAndJwt({
-            jwt: response.token,
-            userInformation: response.userInformation
-          });
-        } else {
-          setFeedBackMsg();
-        }
-      })
-      .catch(() => {
-        setIsLoading(false);
-        setIsError(true);
-      });
+  const signIn = ({ id, password }) => {
+    setIsLoading(true);
+    return authApi.fetchSignIn({ id, password }).then(response => {
+      setIsLoading(false);
+      if (response.success) {
+        setUserInformationAndJwt({
+          jwt: response.token,
+          userInformation: response.userInformation
+        });
+      }
+      return false;
+    });
   };
 
   return (
     <LoadingSpinner loadingState={isLoading}>
-      {isError ? <PageError /> : <SignInComponent signIn={signIn} />}
+      <SignInComponent signIn={signIn} />
     </LoadingSpinner>
   );
 };

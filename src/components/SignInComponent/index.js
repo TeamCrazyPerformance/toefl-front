@@ -42,6 +42,7 @@ const SignInComponent = props => {
       validationFalse: "아이디를 입력해 주세요"
     }
   ]);
+
   const password = useValidateInput("", [
     {
       validate: val => !(val === ""),
@@ -66,20 +67,22 @@ const SignInComponent = props => {
     return idValidation && passwordValidation;
   };
 
-  const setFeedBackMsg = () => {
-    id.setFeedbackMsgAndValidation("아이디 혹은 비밀번호 오류입니다", false);
-    password.setFeedbackMsgAndValidation(
-      "아이디 혹은 비밀번호 오류입니다",
-      false
-    );
-  };
-
   const validateInputsAndSignIn = () => {
     if (validateInputs()) {
       signIn({
         id: id.value,
-        password: password.value,
-        setFeedBackMsg
+        password: password.value
+      }).then(result => {
+        if (!result) {
+          id.setFeedbackMsgAndValidation(
+            "아이디 혹은 비밀번호 오류입니다",
+            false
+          );
+          password.setFeedbackMsgAndValidation(
+            "아이디 혹은 비밀번호 오류입니다",
+            false
+          );
+        }
       });
     }
   };
