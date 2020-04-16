@@ -4,7 +4,7 @@ import * as mainApi from "../../api/mainApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import PageError from "../PageError";
 import Map from "../../components/Map";
-// import Sidebar from "../../components/Sidebar";
+import Sidebar from "../../components/Sidebar";
 
 const Main = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,13 +50,17 @@ const Main = () => {
         <PageError />
       ) : (
         <>
+          <Sidebar
+            places={places}
+            hoveredPlaceId={hoveredPlaceId}
+            focusedPlaceId={focusedPlaceId}
+          />
           <Map
             places={places}
             searchPlaceNearBy={searchPlaceNearBy}
             setHoveredPlaceId={setHoveredPlaceId}
             setFocusedPlaceId={setFocusedPlaceId}
           />
-          {/* <Sidebar /> */}
         </>
       )}
     </LoadingSpinner>
