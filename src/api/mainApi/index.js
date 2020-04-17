@@ -19,5 +19,17 @@ export const fetchPlaceNearBy = (mapInstance, searchRadius) => {
         resolve(results);
       }
     );
+  }).then(newPlaces => {
+    const newFormatPlaces = newPlaces.map(place => {
+      return {
+        name: place.name,
+        placeId: place.place_id,
+        location: {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng()
+        }
+      };
+    });
+    return newFormatPlaces;
   });
 };
