@@ -66,7 +66,7 @@ const Map = props => {
     map.addListener("dragend", () => searchPlaceNearBy(map));
     searchPlaceNearBy(map);
     setMapInstance(map);
-  }, []);
+  }, [window.google]);
 
   return (
     <div id="map" ref={mapRef} style={{ height: "100vh", width: "100%" }}>

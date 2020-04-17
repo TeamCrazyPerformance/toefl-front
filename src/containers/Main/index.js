@@ -5,6 +5,7 @@ import LoadingSpinner from "../../components/LoadingSpinner";
 import PageError from "../PageError";
 import Map from "../../components/Map";
 import Sidebar from "../../components/Sidebar";
+import Visibility from "../../components/Visibility";
 
 const Main = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -45,25 +46,28 @@ const Main = () => {
   }, []);
 
   return (
-    <LoadingSpinner loadingState={isLoading}>
-      {isError ? (
-        <PageError />
-      ) : (
-        <>
-          <Sidebar
-            places={places}
-            hoveredPlaceId={hoveredPlaceId}
-            focusedPlaceId={focusedPlaceId}
-          />
-          <Map
-            places={places}
-            searchPlaceNearBy={searchPlaceNearBy}
-            setHoveredPlaceId={setHoveredPlaceId}
-            setFocusedPlaceId={setFocusedPlaceId}
-          />
-        </>
-      )}
-    </LoadingSpinner>
+    <>
+      {isLoading && <LoadingSpinner />}
+      <Visibility isVisible={!isLoading}>
+        {isError ? (
+          <PageError />
+        ) : (
+          <>
+            <Sidebar
+              places={places}
+              hoveredPlaceId={hoveredPlaceId}
+              focusedPlaceId={focusedPlaceId}
+            />
+            <Map
+              places={places}
+              searchPlaceNearBy={searchPlaceNearBy}
+              setHoveredPlaceId={setHoveredPlaceId}
+              setFocusedPlaceId={setFocusedPlaceId}
+            />
+          </>
+        )}
+      </Visibility>
+    </>
   );
 };
 
