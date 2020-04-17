@@ -1,10 +1,9 @@
 import React, { useState } from "react";
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 import PlaceBox from "../PlaceBox";
-import ReviewBox from "../ReviewBox";
-import ReviewInputBox from "../ReviewInputBox";
 
 const SidebarStyles = makeStyles(() => ({
   sidebarWrapper: {
@@ -37,7 +36,7 @@ const SidebarStyles = makeStyles(() => ({
   }
 }));
 
-const Sidebar = () => {
+const Sidebar = props => {
   const [isOpen, setIsOpen] = useState(true);
   const {
     sidebarWrapper,
@@ -47,6 +46,7 @@ const Sidebar = () => {
     sidebarContentWrapper,
     sidebarContent
   } = SidebarStyles();
+  const { places } = props;
 
   const changeIsOpen = () => setIsOpen(!isOpen);
 
@@ -58,14 +58,33 @@ const Sidebar = () => {
       <div className={isOpen ? sidebar : sidebarClose}>
         <div className={sidebarContentWrapper}>
           <div className={sidebarContent}>
-            <PlaceBox />
-            <ReviewBox />
-            <ReviewInputBox />
+            {places.length ? (
+              places.map(place => <PlaceBox key={place.placeId} />)
+            ) : (
+              <></>
+            )}
           </div>
         </div>
       </div>
     </div>
   );
+};
+
+Sidebar.propTypes = {
+  places: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      placeId: PropTypes.string.isRequired,
+      location: PropTypes.shape({
+        lat: PropTypes.number.isRequired,
+        lng: PropTypes.number.isRequired
+      }).isRequired
+    })
+  )
+};
+
+Sidebar.defaultProps = {
+  places: []
 };
 
 export default Sidebar;
