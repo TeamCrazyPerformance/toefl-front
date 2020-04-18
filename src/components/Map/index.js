@@ -57,7 +57,10 @@ const Map = props => {
 
     const markers = createMapMarkers(places);
 
-    return () => removeMapMarkers(markers);
+    return () => {
+      setFocusedPlaceId("");
+      removeMapMarkers(markers);
+    };
   }, [places, mapInstance]);
 
   useEffect(() => {
