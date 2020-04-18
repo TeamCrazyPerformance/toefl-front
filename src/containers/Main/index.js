@@ -44,6 +44,7 @@ const Main = () => {
               places={places}
               hoveredPlaceId={hoveredPlaceId}
               focusedPlaceId={focusedPlaceId}
+              setFocusedPlaceId={setFocusedPlaceId}
             />
             <Map
               places={places}

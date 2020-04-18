@@ -3,7 +3,9 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
+import DetailPlaceBox from "../DetailPlaceBox";
 import PlaceBox from "../PlaceBox";
+import Visibility from "../Visibility";
 
 const SidebarStyles = makeStyles(() => ({
   sidebarWrapper: {
@@ -46,9 +48,13 @@ const Sidebar = props => {
     sidebarContentWrapper,
     sidebarContent
   } = SidebarStyles();
-  const { places } = props;
+  const { places, hoveredPlaceId, focusedPlaceId, setFocusedPlaceId } = props;
 
   const changeIsOpen = () => setIsOpen(!isOpen);
+
+  const findPlace = place => {
+    return place.placeId === focusedPlaceId;
+  };
 
   return (
     <div className={sidebarWrapper}>
@@ -58,10 +64,25 @@ const Sidebar = props => {
       <div className={isOpen ? sidebar : sidebarClose}>
         <div className={sidebarContentWrapper}>
           <div className={sidebarContent}>
-            {places.length ? (
-              places.map(place => <PlaceBox key={place.placeId} />)
+            {focusedPlaceId ? (
+              <Visibility isVisible={!!focusedPlaceId}>
+                <DetailPlaceBox place={places.find(findPlace)} />
+              </Visibility>
             ) : (
-              <></>
+              <Visibility isVisible={!focusedPlaceId}>
+                {places.length ? (
+                  places.map(place => (
+                    <PlaceBox
+                      place={place}
+                      hoveredPlaceId={hoveredPlaceId}
+                      setFocusedPlaceId={setFocusedPlaceId}
+                      key={place.placeId}
+                    />
+                  ))
+                ) : (
+                  <></>
+                )}
+              </Visibility>
             )}
           </div>
         </div>
@@ -80,7 +101,10 @@ Sidebar.propTypes = {
         lng: PropTypes.number.isRequired
       }).isRequired
     })
-  )
+  ),
+  hoveredPlaceId: PropTypes.string.isRequired,
+  focusedPlaceId: PropTypes.string.isRequired,
+  setFocusedPlaceId: PropTypes.func.isRequired
 };
 
 Sidebar.defaultProps = {
