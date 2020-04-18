@@ -6,6 +6,7 @@ import * as authActions from "../../redux/auth/actions";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import * as authApi from "../../api/authApi";
 import SignInComponent from "../../components/SignInComponent";
+import Visibility from "../../components/Visibility";
 
 const SignIn = props => {
   const { setUserInformationAndJwt } = props;
@@ -20,15 +21,19 @@ const SignIn = props => {
           jwt: response.token,
           userInformation: response.userInformation
         });
+        return true;
       }
       return false;
     });
   };
 
   return (
-    <LoadingSpinner loadingState={isLoading}>
-      <SignInComponent signIn={signIn} />
-    </LoadingSpinner>
+    <>
+      {isLoading && <LoadingSpinner />}
+      <Visibility isVisible={!isLoading}>
+        <SignInComponent signIn={signIn} />
+      </Visibility>
+    </>
   );
 };
 
