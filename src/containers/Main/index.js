@@ -18,20 +18,7 @@ const Main = () => {
     const searchRadius = 4000 / mapInstance.zoom;
     mainApi
       .fetchPlaceNearBy(mapInstance, searchRadius)
-      .then(newPlaces => {
-        const newFormatPlaces = newPlaces.map(place => {
-          return {
-            name: place.name,
-            placeId: place.place_id,
-            location: {
-              lat: place.geometry.location.lat(),
-              lng: place.geometry.location.lng()
-            }
-          };
-        });
-        return newFormatPlaces;
-      })
-      .then(newFormatPlaces => setPlaces([...newFormatPlaces]))
+      .then(newPlaces => setPlaces([...newPlaces]))
       .catch(() => setPlaces([]));
   };
 
