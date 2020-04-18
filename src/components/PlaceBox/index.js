@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import Visibility from "../Visibility";
 import ReviewBox from "../ReviewBox";
@@ -8,6 +9,9 @@ const PlaceBoxStyles = makeStyles(() => ({
   placeBoxWrapper: {
     display: "flex",
     paddingBottom: "15px"
+  },
+  placeBoxHovered: {
+    background: "grey"
   },
   placeInfoBoxWrapper: {
     width: "20rem"
@@ -54,9 +58,10 @@ const PlaceBoxStyles = makeStyles(() => ({
   }
 }));
 
-const PlaceBox = () => {
+const PlaceBox = props => {
   const {
     placeBoxWrapper,
+    placeBoxHovered,
     placeInfoBoxWrapper,
     placeName,
     placeRatingWrapper,
@@ -68,10 +73,14 @@ const PlaceBox = () => {
     placeInfo,
     placePhotoBoxWapper
   } = PlaceBoxStyles();
+  const { place, hoveredPlaceId } = props;
 
   return (
     <>
-      <div className={placeBoxWrapper}>
+      <div
+        className={`${placeBoxWrapper} ${hoveredPlaceId === place.placeId &&
+          placeBoxHovered}`}
+      >
         <div className={placeInfoBoxWrapper}>
           <div className={placeName}>Place name</div>
           <div className={placeRatingWrapper}>
@@ -101,6 +110,18 @@ const PlaceBox = () => {
       </Visibility>
     </>
   );
+};
+
+PlaceBox.propTypes = {
+  place: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    placeId: PropTypes.string.isRequired,
+    location: PropTypes.shape({
+      lat: PropTypes.number.isRequired,
+      lng: PropTypes.number.isRequired
+    }).isRequired
+  }).isRequired,
+  hoveredPlaceId: PropTypes.string.isRequired
 };
 
 export default PlaceBox;

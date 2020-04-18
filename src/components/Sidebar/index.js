@@ -46,7 +46,7 @@ const Sidebar = props => {
     sidebarContentWrapper,
     sidebarContent
   } = SidebarStyles();
-  const { places } = props;
+  const { places, hoveredPlaceId, focusedPlaceId } = props;
 
   const changeIsOpen = () => setIsOpen(!isOpen);
 
@@ -59,7 +59,14 @@ const Sidebar = props => {
         <div className={sidebarContentWrapper}>
           <div className={sidebarContent}>
             {places.length ? (
-              places.map(place => <PlaceBox key={place.placeId} />)
+              places.map(place => (
+                <PlaceBox
+                  place={place}
+                  hoveredPlaceId={hoveredPlaceId}
+                  focusedPlaceId={focusedPlaceId}
+                  key={place.placeId}
+                />
+              ))
             ) : (
               <></>
             )}
@@ -80,7 +87,9 @@ Sidebar.propTypes = {
         lng: PropTypes.number.isRequired
       }).isRequired
     })
-  )
+  ),
+  hoveredPlaceId: PropTypes.string.isRequired,
+  focusedPlaceId: PropTypes.string.isRequired
 };
 
 Sidebar.defaultProps = {
