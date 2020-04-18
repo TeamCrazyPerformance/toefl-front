@@ -32,8 +32,12 @@ const Map = props => {
         map: mapInstance
       });
 
-      mapMarker.addListener("hover", () => {
+      mapMarker.addListener("mouseover", () => {
         setHoveredPlaceId(place.placeId);
+      });
+
+      mapMarker.addListener("mouseout", () => {
+        setHoveredPlaceId("");
       });
 
       mapMarker.addListener("click", () => {
