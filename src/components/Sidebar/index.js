@@ -35,6 +35,20 @@ const SidebarStyles = makeStyles(() => ({
   sidebarContent: {
     width: "28rem",
     margin: "auto"
+  },
+  goBackButton: {
+    width: "100%",
+    fontSize: "0.8rem",
+    background: "inherit",
+    border: "none",
+    boxShadow: "none",
+    borderRadius: 0,
+    padding: 0,
+    cursor: "pointer",
+    paddingBottom: "5px",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
   }
 }));
 
@@ -46,7 +60,8 @@ const Sidebar = props => {
     sidebar,
     sidebarClose,
     sidebarContentWrapper,
-    sidebarContent
+    sidebarContent,
+    goBackButton
   } = SidebarStyles();
   const { places, hoveredPlaceId, focusedPlaceId, setFocusedPlaceId } = props;
 
@@ -66,6 +81,13 @@ const Sidebar = props => {
           <div className={sidebarContent}>
             {focusedPlaceId ? (
               <Visibility isVisible={!!focusedPlaceId}>
+                <button
+                  className={goBackButton}
+                  type="button"
+                  onClick={() => setFocusedPlaceId("")}
+                >
+                  목록으로 돌아가기
+                </button>
                 <DetailPlaceBox place={places.find(findPlace)} />
               </Visibility>
             ) : (
