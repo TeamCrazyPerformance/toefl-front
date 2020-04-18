@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
+import DetailPlaceBox from "../DetailPlaceBox";
 import PlaceBox from "../PlaceBox";
 import Visibility from "../Visibility";
 
@@ -65,7 +66,7 @@ const Sidebar = props => {
           <div className={sidebarContent}>
             {focusedPlaceId ? (
               <Visibility isVisible={!!focusedPlaceId}>
-                <div>{places.find(findPlace)}</div>
+                <DetailPlaceBox place={places.find(findPlace)} />
               </Visibility>
             ) : (
               <Visibility isVisible={!focusedPlaceId}>
