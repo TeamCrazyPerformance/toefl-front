@@ -1,9 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
-import Visibility from "../Visibility";
-import ReviewBox from "../ReviewBox";
-import ReviewInputBox from "../ReviewInputBox";
 
 const PlaceBoxStyles = makeStyles(() => ({
   placeBoxWrapper: {
@@ -17,8 +14,18 @@ const PlaceBoxStyles = makeStyles(() => ({
     width: "20rem"
   },
   placeName: {
+    width: "20rem",
     fontSize: "2rem",
-    paddingBottom: "5px"
+    background: "inherit",
+    border: "none",
+    boxShadow: "none",
+    borderRadius: 0,
+    padding: 0,
+    cursor: "pointer",
+    paddingBottom: "5px",
+    whiteSpace: "nowrap",
+    overflow: "hidden",
+    textOverflow: "ellipsis"
   },
   placeRatingWrapper: {
     display: "flex",
@@ -49,9 +56,7 @@ const PlaceBoxStyles = makeStyles(() => ({
   },
   placeInfo: {
     whiteSpace: "normal",
-    height: "100px",
-    align: "left",
-    overflow: "hidden"
+    minHeight: "100px"
   },
   placePhotoBoxWapper: {
     width: "150px"
@@ -73,7 +78,9 @@ const PlaceBox = props => {
     placeInfo,
     placePhotoBoxWapper
   } = PlaceBoxStyles();
-  const { place, hoveredPlaceId } = props;
+  const { place, hoveredPlaceId, setFocusedPlaceId } = props;
+
+  const focusPlace = () => setFocusedPlaceId(place.placeId);
 
   return (
     <>
@@ -82,7 +89,9 @@ const PlaceBox = props => {
           placeBoxHovered}`}
       >
         <div className={placeInfoBoxWrapper}>
-          <div className={placeName}>Place name</div>
+          <button className={placeName} type="button" onClick={focusPlace}>
+            Place nameasdfasdfasdfa
+          </button>
           <div className={placeRatingWrapper}>
             <div className={placeRating}>4.0</div>
             <div className={placeRatingStar}>star</div>
@@ -98,16 +107,14 @@ const PlaceBox = props => {
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
             ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
             aliquip ex ea commodo consequat. consectetur adipiscing elit, sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. sed do
+            eiusmod tempor incididunt ut labore et dolore magna aliqua. sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua.
           </div>
         </div>
         <div className={placePhotoBoxWapper}>photo</div>
       </div>
-
-      <Visibility isVisible={false}>
-        <ReviewBox />
-        <ReviewInputBox />
-      </Visibility>
     </>
   );
 };
@@ -121,7 +128,8 @@ PlaceBox.propTypes = {
       lng: PropTypes.number.isRequired
     }).isRequired
   }).isRequired,
-  hoveredPlaceId: PropTypes.string.isRequired
+  hoveredPlaceId: PropTypes.string.isRequired,
+  setFocusedPlaceId: PropTypes.func.isRequired
 };
 
 export default PlaceBox;
