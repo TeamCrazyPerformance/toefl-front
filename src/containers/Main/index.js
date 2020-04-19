@@ -3,7 +3,7 @@ import * as googleLib from "../../lib/googleLib";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import PageError from "../PageError";
 import Map from "../Map";
-import Sidebar from "../../components/Sidebar";
+import Sidebar from "../Sidebar";
 import Visibility from "../../components/Visibility";
 
 const Main = () => {
@@ -34,6 +34,7 @@ const Main = () => {
             <Sidebar
               places={places}
               hoveredPlaceId={hoveredPlaceId}
+              setHoveredPlaceId={setHoveredPlaceId}
               focusedPlaceId={focusedPlaceId}
               setFocusedPlaceId={setFocusedPlaceId}
             />
