@@ -20,6 +20,7 @@ export const fetchPlaceNearBy = (mapInstance, searchRadius) => {
       return {
         name: place.name,
         placeId: place.place_id,
+        address: place.vicinity,
         location: {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng()
@@ -27,5 +28,32 @@ export const fetchPlaceNearBy = (mapInstance, searchRadius) => {
       };
     });
     return newFormatPlaces;
+  });
+};
+
+export const fetchPlace = (mapInstance, placeId) => {
+  return new Promise((resolve, reject) => {
+    const service = new window.google.maps.places.PlacesService(mapInstance);
+    service.getDetails(
+      {
+        placeId,
+        fields: ["name", "formatted_phone_number", "geometry", "vicinity"]
+      },
+      (results, status) => {
+        if (status !== "OK") reject();
+        resolve(results);
+      }
+    );
+  }).then(placeDetail => {
+    const newFormatPlaceDetail = {
+      name: placeDetail.name,
+      placeId,
+      address: placeDetail.vicinity,
+      location: {
+        lat: placeDetail.geometry.location.lat(),
+        lng: placeDetail.geometry.location.lng()
+      }
+    };
+    return newFormatPlaceDetail;
   });
 };
