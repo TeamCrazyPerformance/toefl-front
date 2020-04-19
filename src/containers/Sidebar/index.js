@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
+import * as reviewApi from "../../api/reviewApi";
 import SidebarComponent from "../../components/Sidebar";
 import Visibility from "../../components/Visibility";
 import PlaceBoxList from "../../components/PlaceBoxList";
@@ -13,6 +14,16 @@ const Sidebar = props => {
     return place.placeId === focusedPlaceId;
   };
 
+  const [focusedPlace, setFocusedPlace] = useState({});
+
+  useEffect(() => {
+    setFocusedPlace(places.find(findPlace));
+  }, [focusedPlaceId]);
+
+  const getPlaceRating = placeId => {
+    return reviewApi.fetchPlaceStar(placeId).then(response => response);
+  };
+
   return (
     <SidebarComponent>
       <Visibility isVisible={!focusedPlaceId}>
@@ -24,7 +35,8 @@ const Sidebar = props => {
       </Visibility>
       <Visibility isVisible={!!focusedPlaceId}>
         <DetailPlaceBox
-          place={places.find(findPlace)}
+          place={focusedPlace}
+          getPlaceRating={getPlaceRating}
           setFocusedPlaceId={setFocusedPlaceId}
         />
         <ReviewsBox reviews={[]} />

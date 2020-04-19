@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -71,7 +71,16 @@ const DetailPlaceBox = props => {
     placeLocationAddress,
     goBackButton
   } = DetailPlaceBoxStyles();
-  const { setFocusedPlaceId } = props;
+  const { place, getPlaceRating, setFocusedPlaceId } = props;
+
+  const [customPlaceRating, setCustomPlaceRating] = useState(0);
+  useEffect(() => {
+    if (!place.placeId) return;
+    getPlaceRating(place.placeId).then(rating => {
+      if (!isNaN(rating)) setCustomPlaceRating(rating);
+      else setCustomPlaceRating(0);
+    });
+  }, [place]);
 
   return (
     <>
@@ -87,7 +96,7 @@ const DetailPlaceBox = props => {
           Place name lorem idunt ut laboreadipiscing elit
         </div>
         <div className={placeRatingWrapper}>
-          <div className={placeRating}>4.0</div>
+          <div className={placeRating}>{customPlaceRating}</div>
           <div className={placeRatingStar}>star</div>
         </div>
         <div className={placeLocationPhoneNum}>0100000000000</div>
@@ -100,7 +109,27 @@ const DetailPlaceBox = props => {
 };
 
 DetailPlaceBox.propTypes = {
+  place: PropTypes.shape({
+    name: PropTypes.string,
+    placeId: PropTypes.string,
+    location: PropTypes.shape({
+      lat: PropTypes.number,
+      lng: PropTypes.number
+    })
+  }),
+  getPlaceRating: PropTypes.func.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
+};
+
+DetailPlaceBox.defaultProps = {
+  place: {
+    name: "",
+    placeId: "",
+    location: {
+      lat: 0,
+      lng: 0
+    }
+  }
 };
 
 export default DetailPlaceBox;
