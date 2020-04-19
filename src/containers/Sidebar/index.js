@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import PropTypes from "prop-types";
 import * as reviewApi from "../../api/reviewApi";
+import * as mainApi from "../../api/mainApi";
 import SidebarComponent from "../../components/Sidebar";
 import Visibility from "../../components/Visibility";
 import PlaceBoxList from "../../components/PlaceBoxList";
@@ -8,20 +9,20 @@ import DetailPlaceBox from "../../components/DetailPlaceBox";
 import ReviewsBox from "../../components/ReviewsBox";
 
 const Sidebar = props => {
-  const { places, hoveredPlaceId, focusedPlaceId, setFocusedPlaceId } = props;
-
-  const findPlace = place => {
-    return place.placeId === focusedPlaceId;
-  };
-
-  const [focusedPlace, setFocusedPlace] = useState({});
-
-  useEffect(() => {
-    setFocusedPlace(places.find(findPlace));
-  }, [focusedPlaceId]);
+  const {
+    places,
+    mapInstance,
+    hoveredPlaceId,
+    focusedPlaceId,
+    setFocusedPlaceId
+  } = props;
 
   const getPlaceRating = placeId => {
     return reviewApi.fetchPlaceStar(placeId).then(response => response);
+  };
+
+  const getDetailPlace = placeId => {
+    return mainApi.fetchPlace(mapInstance, placeId).then(response => response);
   };
 
   return (
@@ -35,7 +36,8 @@ const Sidebar = props => {
       </Visibility>
       <Visibility isVisible={!!focusedPlaceId}>
         <DetailPlaceBox
-          place={focusedPlace}
+          focusedPlaceId={focusedPlaceId}
+          getDetailPlace={getDetailPlace}
           getPlaceRating={getPlaceRating}
           setFocusedPlaceId={setFocusedPlaceId}
         />
@@ -56,9 +58,14 @@ Sidebar.propTypes = {
       }).isRequired
     })
   ).isRequired,
+  mapInstance: PropTypes.shape({}),
   hoveredPlaceId: PropTypes.string.isRequired,
   focusedPlaceId: PropTypes.string.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
+};
+
+Sidebar.defaultProps = {
+  mapInstance: {}
 };
 
 export default Sidebar;

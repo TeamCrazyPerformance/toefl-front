@@ -10,6 +10,7 @@ const DetailPlaceBoxStyles = makeStyles(() => ({
   },
   placeName: {
     width: "100%",
+    height: "2rem",
     fontSize: "2rem",
     background: "inherit",
     border: "none",
@@ -21,22 +22,16 @@ const DetailPlaceBoxStyles = makeStyles(() => ({
     overflow: "hidden",
     textOverflow: "ellipsis"
   },
-  placeRatingWrapper: {
-    display: "flex",
-    paddingBottom: "5px"
-  },
   placeRating: {
-    width: "35px",
+    width: "100%",
+    height: "1.3rem",
     fontSize: "1.3rem",
-    paddingRight: "10px"
-  },
-  placeRatingStar: {
-    width: "calc(100%-35px)",
-    height: "1.3rem"
+    marginBottom: "15px"
   },
   placeLocationPhoneNum: {
     width: "100%",
-    paddingRight: "10px"
+    height: "1rem",
+    marginBottom: "15px"
   },
   placeLocationAddress: {
     width: "100%",
@@ -64,23 +59,52 @@ const DetailPlaceBox = props => {
   const {
     placeInfoBoxWrapper,
     placeName,
-    placeRatingWrapper,
     placeRating,
-    placeRatingStar,
     placeLocationPhoneNum,
     placeLocationAddress,
     goBackButton
   } = DetailPlaceBoxStyles();
-  const { place, getPlaceRating, setFocusedPlaceId } = props;
-
+  const {
+    focusedPlaceId,
+    getDetailPlace,
+    getPlaceRating,
+    setFocusedPlaceId
+  } = props;
+  const [detailPlace, setDetailPlace] = useState({
+    name: "",
+    placeId: "",
+    address: "",
+    phoneNumber: "",
+    location: {
+      lat: 0,
+      lng: 0
+    }
+  });
   const [customPlaceRating, setCustomPlaceRating] = useState(0);
+
   useEffect(() => {
-    if (!place.placeId) return;
-    getPlaceRating(place.placeId).then(rating => {
-      if (!isNaN(rating)) setCustomPlaceRating(rating);
-      else setCustomPlaceRating(0);
-    });
-  }, [place]);
+    if (focusedPlaceId) {
+      getDetailPlace(focusedPlaceId).then(response => setDetailPlace(response));
+      getPlaceRating(focusedPlaceId).then(rating => {
+        if (!isNaN(rating)) setCustomPlaceRating(rating);
+        else setCustomPlaceRating(0);
+      });
+    }
+
+    return () => {
+      setDetailPlace({
+        name: "",
+        placeId: "",
+        address: "",
+        phoneNumber: "",
+        location: {
+          lat: 0,
+          lng: 0
+        }
+      });
+      setCustomPlaceRating(0);
+    };
+  }, [focusedPlaceId]);
 
   return (
     <>
@@ -92,44 +116,22 @@ const DetailPlaceBox = props => {
         목록으로 돌아가기
       </button>
       <div className={placeInfoBoxWrapper}>
-        <div className={placeName}>
-          Place name lorem idunt ut laboreadipiscing elit
+        <div className={placeName}>{detailPlace.name}</div>
+        <div className={placeRating}>평점: {customPlaceRating}</div>
+        <div className={placeLocationPhoneNum}>
+          전화번호: {detailPlace.phoneNumber || "X"}
         </div>
-        <div className={placeRatingWrapper}>
-          <div className={placeRating}>{customPlaceRating}</div>
-          <div className={placeRatingStar}>star</div>
-        </div>
-        <div className={placeLocationPhoneNum}>0100000000000</div>
-        <div className={placeLocationAddress}>
-          locat lorem sit amet, consectetur adipiscing elit, sed
-        </div>
+        <div className={placeLocationAddress}>주소: {detailPlace.address}</div>
       </div>
     </>
   );
 };
 
 DetailPlaceBox.propTypes = {
-  place: PropTypes.shape({
-    name: PropTypes.string,
-    placeId: PropTypes.string,
-    location: PropTypes.shape({
-      lat: PropTypes.number,
-      lng: PropTypes.number
-    })
-  }),
+  focusedPlaceId: PropTypes.string.isRequired,
+  getDetailPlace: PropTypes.func.isRequired,
   getPlaceRating: PropTypes.func.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
-};
-
-DetailPlaceBox.defaultProps = {
-  place: {
-    name: "",
-    placeId: "",
-    location: {
-      lat: 0,
-      lng: 0
-    }
-  }
 };
 
 export default DetailPlaceBox;
