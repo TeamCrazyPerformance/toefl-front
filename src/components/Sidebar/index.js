@@ -3,9 +3,6 @@ import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
-import DetailPlaceBox from "../DetailPlaceBox";
-import PlaceBox from "../PlaceBox";
-import Visibility from "../Visibility";
 
 const SidebarStyles = makeStyles(() => ({
   sidebarWrapper: {
@@ -35,20 +32,6 @@ const SidebarStyles = makeStyles(() => ({
   sidebarContent: {
     width: "28rem",
     margin: "auto"
-  },
-  goBackButton: {
-    width: "100%",
-    fontSize: "0.8rem",
-    background: "inherit",
-    border: "none",
-    boxShadow: "none",
-    borderRadius: 0,
-    padding: 0,
-    cursor: "pointer",
-    paddingBottom: "5px",
-    whiteSpace: "nowrap",
-    overflow: "hidden",
-    textOverflow: "ellipsis"
   }
 }));
 
@@ -60,16 +43,11 @@ const Sidebar = props => {
     sidebar,
     sidebarClose,
     sidebarContentWrapper,
-    sidebarContent,
-    goBackButton
+    sidebarContent
   } = SidebarStyles();
-  const { places, hoveredPlaceId, focusedPlaceId, setFocusedPlaceId } = props;
+  const { children } = props;
 
   const changeIsOpen = () => setIsOpen(!isOpen);
-
-  const findPlace = place => {
-    return place.placeId === focusedPlaceId;
-  };
 
   return (
     <div className={sidebarWrapper}>
@@ -78,35 +56,7 @@ const Sidebar = props => {
       </IconButton>
       <div className={isOpen ? sidebar : sidebarClose}>
         <div className={sidebarContentWrapper}>
-          <div className={sidebarContent}>
-            {focusedPlaceId ? (
-              <Visibility isVisible={!!focusedPlaceId}>
-                <button
-                  className={goBackButton}
-                  type="button"
-                  onClick={() => setFocusedPlaceId("")}
-                >
-                  목록으로 돌아가기
-                </button>
-                <DetailPlaceBox place={places.find(findPlace)} />
-              </Visibility>
-            ) : (
-              <Visibility isVisible={!focusedPlaceId}>
-                {places.length ? (
-                  places.map(place => (
-                    <PlaceBox
-                      place={place}
-                      hoveredPlaceId={hoveredPlaceId}
-                      setFocusedPlaceId={setFocusedPlaceId}
-                      key={place.placeId}
-                    />
-                  ))
-                ) : (
-                  <></>
-                )}
-              </Visibility>
-            )}
-          </div>
+          <div className={sidebarContent}>{children}</div>
         </div>
       </div>
     </div>
@@ -114,23 +64,7 @@ const Sidebar = props => {
 };
 
 Sidebar.propTypes = {
-  places: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      placeId: PropTypes.string.isRequired,
-      location: PropTypes.shape({
-        lat: PropTypes.number.isRequired,
-        lng: PropTypes.number.isRequired
-      }).isRequired
-    })
-  ),
-  hoveredPlaceId: PropTypes.string.isRequired,
-  focusedPlaceId: PropTypes.string.isRequired,
-  setFocusedPlaceId: PropTypes.func.isRequired
-};
-
-Sidebar.defaultProps = {
-  places: []
+  children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]).isRequired
 };
 
 export default Sidebar;

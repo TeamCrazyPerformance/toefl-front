@@ -1,24 +1,35 @@
 import React from "react";
 import PropTypes from "prop-types";
 import SidebarComponent from "../../components/Sidebar";
+import Visibility from "../../components/Visibility";
+import PlaceBoxList from "../../components/PlaceBoxList";
+import DetailPlaceBox from "../../components/DetailPlaceBox";
+import ReviewsBox from "../../components/ReviewsBox";
 
 const Sidebar = props => {
-  const {
-    places,
-    hoveredPlaceId,
-    setHoveredPlaceId,
-    focusedPlaceId,
-    setFocusedPlaceId
-  } = props;
+  const { places, hoveredPlaceId, focusedPlaceId, setFocusedPlaceId } = props;
+
+  const findPlace = place => {
+    return place.placeId === focusedPlaceId;
+  };
 
   return (
-    <SidebarComponent
-      places={places}
-      hoveredPlaceId={hoveredPlaceId}
-      setHoveredPlaceId={setHoveredPlaceId}
-      focusedPlaceId={focusedPlaceId}
-      setFocusedPlaceId={setFocusedPlaceId}
-    />
+    <SidebarComponent>
+      <Visibility isVisible={!focusedPlaceId}>
+        <PlaceBoxList
+          places={places}
+          hoveredPlaceId={hoveredPlaceId}
+          setFocusedPlaceId={setFocusedPlaceId}
+        />
+      </Visibility>
+      <Visibility isVisible={!!focusedPlaceId}>
+        <DetailPlaceBox
+          place={places.find(findPlace)}
+          setFocusedPlaceId={setFocusedPlaceId}
+        />
+        <ReviewsBox reviews={[]} />
+      </Visibility>
+    </SidebarComponent>
   );
 };
 
@@ -34,7 +45,6 @@ Sidebar.propTypes = {
     })
   ).isRequired,
   hoveredPlaceId: PropTypes.string.isRequired,
-  setHoveredPlaceId: PropTypes.func.isRequired,
   focusedPlaceId: PropTypes.string.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
 };

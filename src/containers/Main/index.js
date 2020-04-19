@@ -34,7 +34,6 @@ const Main = () => {
             <Sidebar
               places={places}
               hoveredPlaceId={hoveredPlaceId}
-              setHoveredPlaceId={setHoveredPlaceId}
               focusedPlaceId={focusedPlaceId}
               setFocusedPlaceId={setFocusedPlaceId}
             />
