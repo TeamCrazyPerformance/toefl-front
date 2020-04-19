@@ -4,17 +4,15 @@ import { makeStyles } from "@material-ui/core/styles";
 
 const PlaceBoxStyles = makeStyles(() => ({
   placeBoxWrapper: {
-    display: "flex",
-    paddingBottom: "15px"
+    width: "100%",
+    marginBottom: "15px",
+    border: "1px solid black"
   },
   placeBoxHovered: {
     background: "grey"
   },
-  placeInfoBoxWrapper: {
-    width: "20rem"
-  },
   placeName: {
-    width: "20rem",
+    width: "100%",
     fontSize: "2rem",
     background: "inherit",
     border: "none",
@@ -25,7 +23,8 @@ const PlaceBoxStyles = makeStyles(() => ({
     paddingBottom: "5px",
     whiteSpace: "nowrap",
     overflow: "hidden",
-    textOverflow: "ellipsis"
+    textOverflow: "ellipsis",
+    textAlign: "left"
   },
   placeRatingWrapper: {
     display: "flex",
@@ -37,29 +36,14 @@ const PlaceBoxStyles = makeStyles(() => ({
     paddingRight: "10px"
   },
   placeRatingStar: {
-    width: "300px",
+    width: "calc(100%-35px)",
     height: "1.3rem"
   },
-  placeLocationWapper: {
-    display: "flex",
-    paddingBottom: "5px"
-  },
-  placeLocationPhoneNum: {
-    width: "105px",
-    paddingRight: "10px"
-  },
   placeLocationAddress: {
-    width: "200px",
+    width: "100%",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis"
-  },
-  placeInfo: {
-    whiteSpace: "normal",
-    minHeight: "100px"
-  },
-  placePhotoBoxWapper: {
-    width: "150px"
   }
 }));
 
@@ -67,55 +51,32 @@ const PlaceBox = props => {
   const {
     placeBoxWrapper,
     placeBoxHovered,
-    placeInfoBoxWrapper,
     placeName,
     placeRatingWrapper,
     placeRating,
     placeRatingStar,
-    placeLocationWapper,
-    placeLocationPhoneNum,
-    placeLocationAddress,
-    placeInfo,
-    placePhotoBoxWapper
+    placeLocationAddress
   } = PlaceBoxStyles();
   const { place, hoveredPlaceId, setFocusedPlaceId } = props;
 
   const focusPlace = () => setFocusedPlaceId(place.placeId);
 
   return (
-    <>
-      <div
-        className={`${placeBoxWrapper} ${hoveredPlaceId === place.placeId &&
-          placeBoxHovered}`}
-      >
-        <div className={placeInfoBoxWrapper}>
-          <button className={placeName} type="button" onClick={focusPlace}>
-            Place nameasdfasdfasdfa
-          </button>
-          <div className={placeRatingWrapper}>
-            <div className={placeRating}>4.0</div>
-            <div className={placeRatingStar}>star</div>
-          </div>
-          <div className={placeLocationWapper}>
-            <div className={placeLocationPhoneNum}>01000000000</div>
-            <div className={placeLocationAddress}>
-              locationasdfklfasdfsadfasdfasdfadfs
-            </div>
-          </div>
-          <div className={placeInfo}>
-            Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim
-            ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut
-            aliquip ex ea commodo consequat. consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua.
-          </div>
-        </div>
-        <div className={placePhotoBoxWapper}>photo</div>
+    <div
+      className={`${placeBoxWrapper} ${hoveredPlaceId === place.placeId &&
+        placeBoxHovered}`}
+    >
+      <button className={placeName} type="button" onClick={focusPlace}>
+        Place nameasdfasdfasdfa
+      </button>
+      <div className={placeRatingWrapper}>
+        <div className={placeRating}>4.0</div>
+        <div className={placeRatingStar}>star</div>
       </div>
-    </>
+      <div className={placeLocationAddress}>
+        locationasdfklfasdfsadfasdfasdfadfs
+      </div>
+    </div>
   );
 };
 
