@@ -10,6 +10,7 @@ const Main = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [places, setPlaces] = useState([]);
+  const [mapInstance, setMapInstance] = useState({});
   const [hoveredPlaceId, setHoveredPlaceId] = useState("");
   const [focusedPlaceId, setFocusedPlaceId] = useState("");
 
@@ -33,6 +34,7 @@ const Main = () => {
           <>
             <Sidebar
               places={places}
+              mapInstance={mapInstance}
               hoveredPlaceId={hoveredPlaceId}
               focusedPlaceId={focusedPlaceId}
               setFocusedPlaceId={setFocusedPlaceId}
@@ -40,6 +42,7 @@ const Main = () => {
             <Map
               places={places}
               setPlaces={setPlaces}
+              setMapInstance={setMapInstance}
               setHoveredPlaceId={setHoveredPlaceId}
               setFocusedPlaceId={setFocusedPlaceId}
             />
