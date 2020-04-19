@@ -48,6 +48,7 @@ export const fetchPlace = (mapInstance, placeId) => {
     const newFormatPlaceDetail = {
       name: placeDetail.name,
       placeId,
+      phoneNumber: placeDetail.formatted_phone_number,
       address: placeDetail.vicinity,
       location: {
         lat: placeDetail.geometry.location.lat(),
