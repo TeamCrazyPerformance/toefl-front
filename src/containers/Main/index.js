@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from "react";
 import * as googleLib from "../../lib/googleLib";
-import * as mainApi from "../../api/mainApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import PageError from "../PageError";
-import Map from "../../components/Map";
+import Map from "../Map";
 import Sidebar from "../../components/Sidebar";
 import Visibility from "../../components/Visibility";
 
@@ -13,14 +12,6 @@ const Main = () => {
   const [places, setPlaces] = useState([]);
   const [hoveredPlaceId, setHoveredPlaceId] = useState("");
   const [focusedPlaceId, setFocusedPlaceId] = useState("");
-
-  const searchPlaceNearBy = mapInstance => {
-    const searchRadius = 4000 / mapInstance.zoom;
-    mainApi
-      .fetchPlaceNearBy(mapInstance, searchRadius)
-      .then(newPlaces => setPlaces([...newPlaces]))
-      .catch(() => setPlaces([]));
-  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -48,7 +39,7 @@ const Main = () => {
             />
             <Map
               places={places}
-              searchPlaceNearBy={searchPlaceNearBy}
+              setPlaces={setPlaces}
               setHoveredPlaceId={setHoveredPlaceId}
               setFocusedPlaceId={setFocusedPlaceId}
             />
