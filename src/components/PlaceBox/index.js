@@ -5,7 +5,7 @@ import { makeStyles } from "@material-ui/core/styles";
 const PlaceBoxStyles = makeStyles(() => ({
   placeBoxWrapper: {
     width: "100%",
-    marginBottom: "15px",
+    marginBottom: "1rem",
     border: "1px solid black"
   },
   placeBoxHovered: {
@@ -20,7 +20,7 @@ const PlaceBoxStyles = makeStyles(() => ({
     borderRadius: 0,
     padding: 0,
     cursor: "pointer",
-    paddingBottom: "5px",
+    paddingBottom: "0.3rem",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis",
@@ -28,15 +28,15 @@ const PlaceBoxStyles = makeStyles(() => ({
   },
   placeRatingWrapper: {
     display: "flex",
-    paddingBottom: "5px"
+    paddingBottom: "0.3rem"
   },
   placeRating: {
-    width: "35px",
+    width: "2.1rem",
     fontSize: "1.3rem",
-    paddingRight: "10px"
+    paddingRight: "0.6rem"
   },
   placeRatingStar: {
-    width: "calc(100%-35px)",
+    width: "calc(100%-2.1rem)",
     height: "1.3rem"
   },
   placeLocationAddress: {

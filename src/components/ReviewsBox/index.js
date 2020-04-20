@@ -6,7 +6,7 @@ const ReviewsBox = props => {
   const { reviews } = props;
 
   return (
-    <div>
+    <>
       {reviews.length ? (
         reviews.map(review => {
           return <ReviewBox key={review.reviewerId} />;
@@ -14,7 +14,7 @@ const ReviewsBox = props => {
       ) : (
         <div>아직 리뷰가 없습니다.</div>
       )}
-    </div>
+    </>
   );
 };
 

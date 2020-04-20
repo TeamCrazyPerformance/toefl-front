@@ -4,19 +4,19 @@ import { makeStyles } from "@material-ui/core/styles";
 const ReviewBoxStyles = makeStyles(() => ({
   reviewBoxWrapper: {
     width: "100%",
-    paddingBottom: "15px"
+    paddingBottom: "1rem"
   },
   reviewBoxReviewerId: {
     width: "100%",
-    paddingBottom: "5px"
+    paddingBottom: "0.3rem"
   },
   reviewBoxReviewerStar: {
     width: "100%",
-    paddingBottom: "5px"
+    paddingBottom: "0.3rem"
   },
   reviewBoxReviewContent: {
     width: "100%",
-    paddingBottom: "5px"
+    paddingBottom: "0.3rem"
   }
 }));
 
