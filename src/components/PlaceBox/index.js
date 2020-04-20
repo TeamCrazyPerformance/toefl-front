@@ -26,19 +26,6 @@ const PlaceBoxStyles = makeStyles(() => ({
     textOverflow: "ellipsis",
     textAlign: "left"
   },
-  placeRatingWrapper: {
-    display: "flex",
-    paddingBottom: "0.3rem"
-  },
-  placeRating: {
-    width: "2.1rem",
-    fontSize: "1.3rem",
-    paddingRight: "0.6rem"
-  },
-  placeRatingStar: {
-    width: "calc(100%-2.1rem)",
-    height: "1.3rem"
-  },
   placeLocationAddress: {
     width: "100%",
     whiteSpace: "nowrap",
@@ -52,13 +39,9 @@ const PlaceBox = props => {
     placeBoxWrapper,
     placeBoxHovered,
     placeName,
-    placeRatingWrapper,
-    placeRating,
-    placeRatingStar,
     placeLocationAddress
   } = PlaceBoxStyles();
   const { place, hoveredPlaceId, setFocusedPlaceId } = props;
-
   const focusPlace = () => setFocusedPlaceId(place.placeId);
 
   return (
@@ -67,30 +50,37 @@ const PlaceBox = props => {
         placeBoxHovered}`}
     >
       <button className={placeName} type="button" onClick={focusPlace}>
-        Place nameasdfasdfasdfa
+        {place.name}
       </button>
-      <div className={placeRatingWrapper}>
-        <div className={placeRating}>4.0</div>
-        <div className={placeRatingStar}>star</div>
-      </div>
-      <div className={placeLocationAddress}>
-        locationasdfklfasdfsadfasdfasdfadfs
-      </div>
+      <div className={placeLocationAddress}>{place.address}</div>
     </div>
   );
 };
 
 PlaceBox.propTypes = {
   place: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    placeId: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    placeId: PropTypes.string,
+    address: PropTypes.string,
     location: PropTypes.shape({
-      lat: PropTypes.number.isRequired,
-      lng: PropTypes.number.isRequired
-    }).isRequired
-  }).isRequired,
+      lat: PropTypes.number,
+      lng: PropTypes.number
+    })
+  }),
   hoveredPlaceId: PropTypes.string.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
+};
+
+PlaceBox.defaultProps = {
+  place: {
+    name: "",
+    placeId: "",
+    address: "",
+    location: {
+      lat: 0,
+      lng: 0
+    }
+  }
 };
 
 export default PlaceBox;
