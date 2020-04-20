@@ -25,8 +25,8 @@ const SidebarStyles = makeStyles(() => ({
   },
   sidebarContentWrapper: {
     width: "100%",
-    height: "calc(95vh - 50px)",
-    paddingTop: "50px",
+    height: "calc(95vh - 3.1rem)",
+    paddingTop: "3.1rem",
     overflowY: "auto"
   },
   sidebarContent: {

@@ -5,8 +5,8 @@ import { makeStyles } from "@material-ui/core/styles";
 const DetailPlaceBoxStyles = makeStyles(() => ({
   placeInfoBoxWrapper: {
     width: "100%",
-    marginBottom: "15px",
-    border: "1px solid black"
+    marginBottom: "1rem",
+    border: "0.1rem solid black"
   },
   placeName: {
     width: "100%",
@@ -16,19 +16,19 @@ const DetailPlaceBoxStyles = makeStyles(() => ({
     boxShadow: "none",
     borderRadius: 0,
     padding: 0,
-    paddingBottom: "5px",
+    paddingBottom: "0.3rem",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis"
   },
   placeRatingWrapper: {
     display: "flex",
-    paddingBottom: "5px"
+    paddingBottom: "0.3rem"
   },
   placeRating: {
-    width: "35px",
+    width: "2.1rem",
     fontSize: "1.3rem",
-    paddingRight: "10px"
+    paddingRight: "0.6rem"
   },
   placeRatingStar: {
     width: "calc(100%-35px)",
@@ -36,7 +36,7 @@ const DetailPlaceBoxStyles = makeStyles(() => ({
   },
   placeLocationPhoneNum: {
     width: "100%",
-    paddingRight: "10px"
+    paddingRight: "0.6rem"
   },
   placeLocationAddress: {
     width: "100%",
@@ -53,7 +53,7 @@ const DetailPlaceBoxStyles = makeStyles(() => ({
     borderRadius: 0,
     padding: 0,
     cursor: "pointer",
-    paddingBottom: "5px",
+    paddingBottom: "0.3rem",
     whiteSpace: "nowrap",
     overflow: "hidden",
     textOverflow: "ellipsis"

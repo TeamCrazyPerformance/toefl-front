@@ -17,15 +17,15 @@ const EmailValidationComponentStyles = makeStyles(() => ({
   },
   title: {
     fontSize: "3.5rem",
-    paddingBottom: "10px"
+    paddingBottom: "0.6rem"
   },
   validationBox: {
     display: "flex",
-    paddingBottom: "10px"
+    paddingBottom: "0.6rem"
   },
   textFieldWapper: {
     width: "17rem",
-    marginRight: "20px"
+    marginRight: "1.25rem"
   },
   validationButtonWapper: {
     width: "5rem",
