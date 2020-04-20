@@ -6,7 +6,7 @@ const PlaceBoxList = props => {
   const { places, hoveredPlaceId, setFocusedPlaceId } = props;
 
   return (
-    <div>
+    <>
       {places.length ? (
         places.map(place => (
           <PlaceBox
@@ -19,7 +19,7 @@ const PlaceBoxList = props => {
       ) : (
         <></>
       )}
-    </div>
+    </>
   );
 };
 

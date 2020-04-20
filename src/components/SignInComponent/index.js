@@ -19,11 +19,11 @@ const SignInComponentStyles = makeStyles(() => ({
     fontSize: "10rem"
   },
   textFieldWapper: {
-    paddingBottom: "10px",
+    paddingBottom: "0.6rem",
     width: "20rem"
   },
   buttonWapper: {
-    paddingBottom: "10px",
+    paddingBottom: "0.6rem",
     width: "10rem"
   }
 }));
