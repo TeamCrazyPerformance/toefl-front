@@ -17,11 +17,11 @@ const AdditionalInformationComponentStyles = makeStyles(() => ({
   },
   title: {
     fontSize: "4rem",
-    paddingBottom: "10px"
+    paddingBottom: "0.6rem"
   },
   textFieldWapper: {
     width: "20rem",
-    paddingBottom: "10px"
+    paddingBottom: "0.6rem"
   },
   buttonWrapper: {
     width: "20rem"
