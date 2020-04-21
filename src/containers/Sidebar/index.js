@@ -18,11 +18,11 @@ const Sidebar = props => {
   } = props;
 
   const getPlaceRating = placeId => {
-    return reviewApi.fetchPlaceStar(placeId).then(response => response);
+    return reviewApi.fetchPlaceStar(placeId);
   };
 
   const getDetailPlace = placeId => {
-    return mainApi.fetchPlace(mapInstance, placeId).then(response => response);
+    return mainApi.fetchPlace(mapInstance, placeId);
   };
 
   return (
