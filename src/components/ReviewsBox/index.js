@@ -31,6 +31,10 @@ const ReviewsBox = props => {
     };
   }, [focusedPlaceId, page]);
 
+  const getPreviousReview = () => setPage(page - 1);
+
+  const getNextReview = () => setPage(page + 1);
+
   return (
     <>
       {reviews.length ? (
@@ -40,6 +44,17 @@ const ReviewsBox = props => {
       ) : (
         <div>아직 리뷰가 없습니다.</div>
       )}
+
+      {page === 0 ? null : (
+        <button type="button" onClick={getPreviousReview}>
+          이전 리뷰
+        </button>
+      )}
+      {hasNextPage ? (
+        <button type="button" onClick={getNextReview}>
+          다음 리뷰
+        </button>
+      ) : null}
     </>
   );
 };
