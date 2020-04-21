@@ -25,6 +25,10 @@ const Sidebar = props => {
     return mainApi.fetchPlace(mapInstance, placeId);
   };
 
+  const getPlaceReview = (placeId, count) => {
+    return reviewApi.fetchPlaceReview(placeId, count);
+  };
+
   return (
     <SidebarComponent>
       <Visibility isVisible={!focusedPlaceId}>
@@ -41,7 +45,10 @@ const Sidebar = props => {
           getPlaceRating={getPlaceRating}
           setFocusedPlaceId={setFocusedPlaceId}
         />
-        <ReviewsBox reviews={[]} />
+        <ReviewsBox
+          focusedPlaceId={focusedPlaceId}
+          getPlaceReview={getPlaceReview}
+        />
       </Visibility>
     </SidebarComponent>
   );
