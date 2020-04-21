@@ -70,16 +70,7 @@ const DetailPlaceBox = props => {
     getPlaceRating,
     setFocusedPlaceId
   } = props;
-  const [detailPlace, setDetailPlace] = useState({
-    name: "",
-    placeId: "",
-    address: "",
-    phoneNumber: "",
-    location: {
-      lat: 0,
-      lng: 0
-    }
-  });
+  const [detailPlace, setDetailPlace] = useState({});
   const [customPlaceRating, setCustomPlaceRating] = useState(0);
 
   useEffect(() => {
