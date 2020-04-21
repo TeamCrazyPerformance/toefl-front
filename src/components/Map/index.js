@@ -11,6 +11,7 @@ const MAP_OPTION = {
 const Map = props => {
   const {
     places,
+    setParentMapInstance,
     searchPlaceNearBy,
     setHoveredPlaceId,
     setFocusedPlaceId
@@ -73,6 +74,7 @@ const Map = props => {
     map.addListener("dragend", () => searchPlaceNearBy(map));
     searchPlaceNearBy(map);
     setMapInstance(map);
+    setParentMapInstance(map);
   }, [window.google]);
 
   return (
@@ -93,6 +95,7 @@ Map.propTypes = {
       }).isRequired
     })
   ).isRequired,
+  setParentMapInstance: PropTypes.func.isRequired,
   searchPlaceNearBy: PropTypes.func.isRequired,
   setHoveredPlaceId: PropTypes.func.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired

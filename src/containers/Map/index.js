@@ -4,7 +4,13 @@ import * as mainApi from "../../api/mainApi";
 import MapComponent from "../../components/Map";
 
 const Map = props => {
-  const { places, setPlaces, setHoveredPlaceId, setFocusedPlaceId } = props;
+  const {
+    places,
+    setMapInstance,
+    setPlaces,
+    setHoveredPlaceId,
+    setFocusedPlaceId
+  } = props;
 
   const searchPlaceNearBy = mapInstance => {
     const searchRadius = 4000 / mapInstance.zoom;
@@ -17,6 +23,7 @@ const Map = props => {
   return (
     <MapComponent
       places={places}
+      setParentMapInstance={setMapInstance}
       searchPlaceNearBy={searchPlaceNearBy}
       setHoveredPlaceId={setHoveredPlaceId}
       setFocusedPlaceId={setFocusedPlaceId}
@@ -35,6 +42,7 @@ Map.propTypes = {
       }).isRequired
     })
   ).isRequired,
+  setMapInstance: PropTypes.func.isRequired,
   setPlaces: PropTypes.func.isRequired,
   setHoveredPlaceId: PropTypes.func.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
