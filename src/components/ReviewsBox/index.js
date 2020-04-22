@@ -19,7 +19,7 @@ const ReviewsBox = props => {
           if (remainReviews < 0) setHasNextPage(false);
           else setHasNextPage(true);
 
-          setRreviews([...response.reviews]);
+          setRreviews([...response.reviewList]);
         }
       });
     }
