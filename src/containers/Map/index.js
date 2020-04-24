@@ -4,26 +4,28 @@ import * as mainApi from "../../api/mainApi";
 import MapComponent from "../../components/MapComponent";
 
 const Map = props => {
-  const {
-    places,
-    setMapInstance,
-    setPlaces,
-    setHoveredPlaceId,
-    setFocusedPlaceId
-  } = props;
+  const { places, setPlaces, setHoveredPlaceId, setFocusedPlaceId } = props;
 
-  const searchPlaceNearBy = mapInstance => {
-    const searchRadius = 4000 / mapInstance.zoom;
+  const searchPlaceNearBy = searchRadius => {
     mainApi
-      .fetchPlaceNearBy(mapInstance, searchRadius)
+      .fetchPlaceNearBy(searchRadius)
       .then(newPlaces => setPlaces([...newPlaces]))
       .catch(() => setPlaces([]));
+  };
+
+  const createMap = (ref, mapOption) => {
+    return mainApi.createMap(ref, mapOption);
+  };
+
+  const createMapMarker = position => {
+    return mainApi.createMapMarker(position);
   };
 
   return (
     <MapComponent
       places={places}
-      setParentMapInstance={setMapInstance}
+      createMap={createMap}
+      createMapMarker={createMapMarker}
       searchPlaceNearBy={searchPlaceNearBy}
       setHoveredPlaceId={setHoveredPlaceId}
       setFocusedPlaceId={setFocusedPlaceId}
@@ -42,7 +44,6 @@ Map.propTypes = {
       }).isRequired
     })
   ).isRequired,
-  setMapInstance: PropTypes.func.isRequired,
   setPlaces: PropTypes.func.isRequired,
   setHoveredPlaceId: PropTypes.func.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 
 const MAP_OPTION = {
@@ -11,36 +11,31 @@ const MAP_OPTION = {
 const MapComponent = props => {
   const {
     places,
-    setParentMapInstance,
+    createMap,
+    createMapMarker,
     searchPlaceNearBy,
     setHoveredPlaceId,
     setFocusedPlaceId
   } = props;
   const mapRef = useRef(null);
-  const [mapInstance, setMapInstance] = useState({});
 
   useEffect(() => {
     const removeMapMarkers = markers => {
       markers.forEach(marker => marker.setMap(null));
     };
 
-    const createMapMarker = place => {
-      const mapMarker = new window.google.maps.Marker({
-        position: {
-          lat: place.location.lat,
-          lng: place.location.lng
-        },
-        map: mapInstance
+    const createMapMarkerInstance = place => {
+      const mapMarker = createMapMarker({
+        lat: place.location.lat,
+        lng: place.location.lng
       });
 
       mapMarker.addListener("mouseover", () => {
         setHoveredPlaceId(place.placeId);
       });
-
       mapMarker.addListener("mouseout", () => {
         setHoveredPlaceId("");
       });
-
       mapMarker.addListener("click", () => {
         setFocusedPlaceId(place.placeId);
       });
@@ -50,31 +45,25 @@ const MapComponent = props => {
 
     const createMapMarkers = newPlaces => {
       const newMapMarkers = newPlaces.map(place => {
-        const mapMarker = createMapMarker(place);
-        return mapMarker;
+        return createMapMarkerInstance(place);
       });
       return newMapMarkers;
     };
 
-    const markers = createMapMarkers(places);
+    const mapMarkers = createMapMarkers(places);
 
     return () => {
       setFocusedPlaceId("");
-      removeMapMarkers(markers);
+      removeMapMarkers(mapMarkers);
     };
-  }, [places, mapInstance]);
+  }, [places]);
 
   useEffect(() => {
     if (!window.google) return;
-    const createMap = (ref, mapOption) => {
-      return new window.google.maps.Map(ref, mapOption);
-    };
-
     const map = createMap(mapRef.current, MAP_OPTION);
-    map.addListener("dragend", () => searchPlaceNearBy(map));
-    searchPlaceNearBy(map);
-    setMapInstance(map);
-    setParentMapInstance(map);
+    const searchRadius = 4000 / map.zoom;
+    map.addListener("dragend", () => searchPlaceNearBy(searchRadius));
+    searchPlaceNearBy(searchRadius);
   }, [window.google]);
 
   return (
@@ -95,7 +84,8 @@ MapComponent.propTypes = {
       }).isRequired
     })
   ).isRequired,
-  setParentMapInstance: PropTypes.func.isRequired,
+  createMap: PropTypes.func.isRequired,
+  createMapMarker: PropTypes.func.isRequired,
   searchPlaceNearBy: PropTypes.func.isRequired,
   setHoveredPlaceId: PropTypes.func.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
