@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 import * as mainApi from "../../api/mainApi";
-import MapComponent from "../../components/Map";
+import MapComponent from "../../components/MapComponent";
 
 const Map = props => {
   const {

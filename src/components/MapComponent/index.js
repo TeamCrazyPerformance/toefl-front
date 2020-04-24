@@ -8,7 +8,7 @@ const MAP_OPTION = {
   mapTypeControl: false
 };
 
-const Map = props => {
+const MapComponent = props => {
   const {
     places,
     setParentMapInstance,
@@ -84,7 +84,7 @@ const Map = props => {
   );
 };
 
-Map.propTypes = {
+MapComponent.propTypes = {
   places: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -101,4 +101,4 @@ Map.propTypes = {
   setFocusedPlaceId: PropTypes.func.isRequired
 };
 
-export default Map;
+export default MapComponent;

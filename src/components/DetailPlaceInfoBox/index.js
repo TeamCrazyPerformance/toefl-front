@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 
-const DetailPlaceBoxStyles = makeStyles(() => ({
+const DetailPlaceInfoBoxStyles = makeStyles(() => ({
   placeInfoBoxWrapper: {
     width: "100%",
     marginBottom: "1rem",
@@ -55,7 +55,7 @@ const DetailPlaceBoxStyles = makeStyles(() => ({
   }
 }));
 
-const DetailPlaceBox = props => {
+const DetailPlaceInfoBox = props => {
   const {
     placeInfoBoxWrapper,
     placeName,
@@ -63,7 +63,7 @@ const DetailPlaceBox = props => {
     placeLocationPhoneNum,
     placeLocationAddress,
     goBackButton
-  } = DetailPlaceBoxStyles();
+  } = DetailPlaceInfoBoxStyles();
   const {
     focusedPlaceId,
     getDetailPlace,
@@ -118,11 +118,11 @@ const DetailPlaceBox = props => {
   );
 };
 
-DetailPlaceBox.propTypes = {
+DetailPlaceInfoBox.propTypes = {
   focusedPlaceId: PropTypes.string.isRequired,
   getDetailPlace: PropTypes.func.isRequired,
   getPlaceRating: PropTypes.func.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
 };
 
-export default DetailPlaceBox;
+export default DetailPlaceInfoBox;

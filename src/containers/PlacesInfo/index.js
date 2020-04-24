@@ -4,11 +4,11 @@ import * as reviewApi from "../../api/reviewApi";
 import * as mainApi from "../../api/mainApi";
 import SidebarComponent from "../../components/Sidebar";
 import Visibility from "../../components/Visibility";
-import PlaceBoxList from "../../components/PlaceBoxList";
-import DetailPlaceBox from "../../components/DetailPlaceBox";
+import PlacesInfoBox from "../../components/PlacesInfoBox";
+import DetailPlaceInfoBox from "../../components/DetailPlaceInfoBox";
 import ReviewsBox from "../../components/ReviewsBox";
 
-const Sidebar = props => {
+const PlacesInfo = props => {
   const {
     places,
     mapInstance,
@@ -32,14 +32,14 @@ const Sidebar = props => {
   return (
     <SidebarComponent>
       <Visibility isVisible={!focusedPlaceId}>
-        <PlaceBoxList
+        <PlacesInfoBox
           places={places}
           hoveredPlaceId={hoveredPlaceId}
           setFocusedPlaceId={setFocusedPlaceId}
         />
       </Visibility>
       <Visibility isVisible={!!focusedPlaceId}>
-        <DetailPlaceBox
+        <DetailPlaceInfoBox
           focusedPlaceId={focusedPlaceId}
           getDetailPlace={getDetailPlace}
           getPlaceRating={getPlaceRating}
@@ -54,7 +54,7 @@ const Sidebar = props => {
   );
 };
 
-Sidebar.propTypes = {
+PlacesInfo.propTypes = {
   places: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -71,8 +71,8 @@ Sidebar.propTypes = {
   setFocusedPlaceId: PropTypes.func.isRequired
 };
 
-Sidebar.defaultProps = {
+PlacesInfo.defaultProps = {
   mapInstance: {}
 };
 
-export default Sidebar;
+export default PlacesInfo;

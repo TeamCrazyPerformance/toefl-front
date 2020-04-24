@@ -3,7 +3,7 @@ import * as googleLib from "../../lib/googleLib";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import PageError from "../PageError";
 import Map from "../Map";
-import Sidebar from "../Sidebar";
+import PlacesInfo from "../PlacesInfo";
 import Visibility from "../../components/Visibility";
 
 const Main = () => {
@@ -32,7 +32,7 @@ const Main = () => {
           <PageError />
         ) : (
           <>
-            <Sidebar
+            <PlacesInfo
               places={places}
               mapInstance={mapInstance}
               hoveredPlaceId={hoveredPlaceId}
