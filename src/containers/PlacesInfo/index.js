@@ -9,20 +9,14 @@ import DetailPlaceInfoBox from "../../components/DetailPlaceInfoBox";
 import ReviewsBox from "../../components/ReviewsBox";
 
 const PlacesInfo = props => {
-  const {
-    places,
-    mapInstance,
-    hoveredPlaceId,
-    focusedPlaceId,
-    setFocusedPlaceId
-  } = props;
+  const { places, hoveredPlaceId, focusedPlaceId, setFocusedPlaceId } = props;
 
   const getPlaceRating = placeId => {
     return reviewApi.fetchPlaceStar(placeId);
   };
 
   const getDetailPlace = placeId => {
-    return mainApi.fetchPlace(mapInstance, placeId);
+    return mainApi.fetchPlace(placeId);
   };
 
   const getPlaceReview = (placeId, count) => {
@@ -65,14 +59,9 @@ PlacesInfo.propTypes = {
       }).isRequired
     })
   ).isRequired,
-  mapInstance: PropTypes.shape({}),
   hoveredPlaceId: PropTypes.string.isRequired,
   focusedPlaceId: PropTypes.string.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
-};
-
-PlacesInfo.defaultProps = {
-  mapInstance: {}
 };
 
 export default PlacesInfo;

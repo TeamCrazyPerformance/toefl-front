@@ -9,62 +9,23 @@ const MAP_OPTION = {
 };
 
 const MapComponent = props => {
-  const {
-    places,
-    createMap,
-    createMapMarker,
-    searchPlaceNearBy,
-    setHoveredPlaceId,
-    setFocusedPlaceId
-  } = props;
+  const { places, createMap, createMapMarkers } = props;
   const mapRef = useRef(null);
 
   useEffect(() => {
-    const removeMapMarkers = markers => {
-      markers.forEach(marker => marker.setMap(null));
-    };
-
-    const createMapMarkerInstance = place => {
-      const mapMarker = createMapMarker({
-        lat: place.location.lat,
-        lng: place.location.lng
-      });
-
-      mapMarker.addListener("mouseover", () => {
-        setHoveredPlaceId(place.placeId);
-      });
-      mapMarker.addListener("mouseout", () => {
-        setHoveredPlaceId("");
-      });
-      mapMarker.addListener("click", () => {
-        setFocusedPlaceId(place.placeId);
-      });
-
-      return mapMarker;
-    };
-
-    const createMapMarkers = newPlaces => {
-      const newMapMarkers = newPlaces.map(place => {
-        return createMapMarkerInstance(place);
-      });
-      return newMapMarkers;
-    };
-
-    const mapMarkers = createMapMarkers(places);
-
-    return () => {
-      setFocusedPlaceId("");
-      removeMapMarkers(mapMarkers);
-    };
-  }, [places]);
+    if (!window.google) return;
+    createMap(mapRef.current, MAP_OPTION);
+  }, [window.google]);
 
   useEffect(() => {
-    if (!window.google) return;
-    const map = createMap(mapRef.current, MAP_OPTION);
-    const searchRadius = 4000 / map.zoom;
-    map.addListener("dragend", () => searchPlaceNearBy(searchRadius));
-    searchPlaceNearBy(searchRadius);
-  }, [window.google]);
+    const mapMarkers = createMapMarkers(places);
+
+    const removeMapMarkers = () => {
+      mapMarkers.forEach(marker => marker.setMap(null));
+    };
+
+    return () => removeMapMarkers();
+  }, [places]);
 
   return (
     <div id="map" ref={mapRef} style={{ height: "100vh", width: "100%" }}>
@@ -85,10 +46,7 @@ MapComponent.propTypes = {
     })
   ).isRequired,
   createMap: PropTypes.func.isRequired,
-  createMapMarker: PropTypes.func.isRequired,
-  searchPlaceNearBy: PropTypes.func.isRequired,
-  setHoveredPlaceId: PropTypes.func.isRequired,
-  setFocusedPlaceId: PropTypes.func.isRequired
+  createMapMarkers: PropTypes.func.isRequired
 };
 
 export default MapComponent;

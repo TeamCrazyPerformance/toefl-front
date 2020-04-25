@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as googleLib from "../../lib/googleLib";
+import * as mainApi from "../../api/mainApi";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import PageError from "../PageError";
 import Map from "../Map";
@@ -10,9 +11,15 @@ const Main = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [places, setPlaces] = useState([]);
-  const [mapInstance, setMapInstance] = useState({});
   const [hoveredPlaceId, setHoveredPlaceId] = useState("");
   const [focusedPlaceId, setFocusedPlaceId] = useState("");
+
+  const searchPlaceNearBy = searchRadius => {
+    mainApi
+      .fetchPlaceNearBy(searchRadius)
+      .then(newPlaces => setPlaces([...newPlaces]))
+      .catch(() => setPlaces([]));
+  };
 
   useEffect(() => {
     setIsLoading(true);
@@ -34,15 +41,13 @@ const Main = () => {
           <>
             <PlacesInfo
               places={places}
-              mapInstance={mapInstance}
               hoveredPlaceId={hoveredPlaceId}
               focusedPlaceId={focusedPlaceId}
               setFocusedPlaceId={setFocusedPlaceId}
             />
             <Map
               places={places}
-              setPlaces={setPlaces}
-              setMapInstance={setMapInstance}
+              searchPlaceNearBy={searchPlaceNearBy}
               setHoveredPlaceId={setHoveredPlaceId}
               setFocusedPlaceId={setFocusedPlaceId}
             />
