@@ -5,8 +5,8 @@ export const createMap = (ref, mapOption) => {
   return mapInstance;
 };
 
-export const createMapMarker = (position = { lat: 0, lng: 0 }) => {
-  return new window.google.maps.Marker(position, mapInstance);
+export const createMapMarker = position => {
+  return new window.google.maps.Marker({ position, map: mapInstance });
 };
 
 export const fetchPlaceNearBy = searchRadius => {
