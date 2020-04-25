@@ -4,67 +4,67 @@ import { makeStyles } from "@material-ui/core/styles";
 import MenuIcon from "@material-ui/icons/Menu";
 import IconButton from "@material-ui/core/IconButton";
 
-const SidebarStyles = makeStyles(() => ({
-  sidebarWrapper: {
+const PlacesInfoWrapperStyles = makeStyles(() => ({
+  placesInfoWrapper: {
     position: "absolute",
     zIndex: 100,
     top: 10,
     left: 10
   },
-  sidebarButton: {
+  placesInfoButton: {
     position: "absolute",
     background: "white"
   },
-  sidebar: {
+  placesInfoWrapperOpen: {
     width: "30rem",
     height: "95vh",
     background: "white"
   },
-  sidebarClose: {
+  placesInfoWrapperClose: {
     display: "none"
   },
-  sidebarContentWrapper: {
+  placesInfoContentWrapper: {
     width: "100%",
     height: "calc(95vh - 3.1rem)",
     paddingTop: "3.1rem",
     overflowY: "auto"
   },
-  sidebarContent: {
+  placesInfoContent: {
     width: "28rem",
     margin: "auto"
   }
 }));
 
-const Sidebar = props => {
-  const [isOpen, setIsOpen] = useState(true);
+const PlacesInfoWrapper = props => {
+  const [isOpen, setIsOpen] = useState(false);
   const {
-    sidebarWrapper,
-    sidebarButton,
-    sidebar,
-    sidebarClose,
-    sidebarContentWrapper,
-    sidebarContent
-  } = SidebarStyles();
+    placesInfoWrapper,
+    placesInfoButton,
+    placesInfoWrapperOpen,
+    placesInfoWrapperClose,
+    placesInfoContentWrapper,
+    placesInfoContent
+  } = PlacesInfoWrapperStyles();
   const { children } = props;
 
   const changeIsOpen = () => setIsOpen(!isOpen);
 
   return (
-    <div className={sidebarWrapper}>
-      <IconButton className={sidebarButton} onClick={changeIsOpen}>
+    <div className={placesInfoWrapper}>
+      <IconButton className={placesInfoButton} onClick={changeIsOpen}>
         <MenuIcon />
       </IconButton>
-      <div className={isOpen ? sidebar : sidebarClose}>
-        <div className={sidebarContentWrapper}>
-          <div className={sidebarContent}>{children}</div>
+      <div className={isOpen ? placesInfoWrapperOpen : placesInfoWrapperClose}>
+        <div className={placesInfoContentWrapper}>
+          <div className={placesInfoContent}>{children}</div>
         </div>
       </div>
     </div>
   );
 };
 
-Sidebar.propTypes = {
+PlacesInfoWrapper.propTypes = {
   children: PropTypes.oneOfType([PropTypes.element, PropTypes.array]).isRequired
 };
 
-export default Sidebar;
+export default PlacesInfoWrapper;

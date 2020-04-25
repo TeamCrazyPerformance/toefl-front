@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import PlaceInfoBox from "../PlaceInfoBox";
 
-const PlacesInfoBox = props => {
+const PlaceInfoBoxList = props => {
   const { places, hoveredPlaceId, setFocusedPlaceId } = props;
 
   return (
@@ -17,13 +17,13 @@ const PlacesInfoBox = props => {
           />
         ))
       ) : (
-        <></>
+        <div>검색된 장소가 없습니다</div>
       )}
     </>
   );
 };
 
-PlacesInfoBox.propTypes = {
+PlaceInfoBoxList.propTypes = {
   places: PropTypes.arrayOf(
     PropTypes.shape({
       name: PropTypes.string.isRequired,
@@ -38,4 +38,4 @@ PlacesInfoBox.propTypes = {
   setFocusedPlaceId: PropTypes.func.isRequired
 };
 
-export default PlacesInfoBox;
+export default PlaceInfoBoxList;

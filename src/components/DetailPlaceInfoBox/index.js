@@ -71,30 +71,23 @@ const DetailPlaceInfoBox = props => {
     setFocusedPlaceId
   } = props;
   const [detailPlace, setDetailPlace] = useState({});
-  const [customPlaceRating, setCustomPlaceRating] = useState(0);
+  const [customPlaceRating, setCustomPlaceRating] = useState("");
 
   useEffect(() => {
+    setDetailPlace({
+      ...detailPlace,
+      name: "잠시만 기다려주세요",
+      address: "잠시만 기다려주세요",
+      phoneNumber: "잠시만 기다려주세요"
+    });
+    setCustomPlaceRating("잠시만 기다려주세요");
     if (focusedPlaceId) {
       getDetailPlace(focusedPlaceId).then(response => setDetailPlace(response));
       getPlaceRating(focusedPlaceId).then(rating => {
-        if (!isNaN(rating)) setCustomPlaceRating(rating);
-        else setCustomPlaceRating(0);
+        if (Number.isNaN(rating)) setCustomPlaceRating(rating);
+        else setCustomPlaceRating("평점을 가져올 수 없습니다");
       });
     }
-
-    return () => {
-      setDetailPlace({
-        name: "",
-        placeId: "",
-        address: "",
-        phoneNumber: "",
-        location: {
-          lat: 0,
-          lng: 0
-        }
-      });
-      setCustomPlaceRating(0);
-    };
   }, [focusedPlaceId]);
 
   return (

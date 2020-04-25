@@ -6,7 +6,10 @@ const PlaceInfoBoxStyles = makeStyles(() => ({
   paceInfoBoxWrapper: {
     width: "100%",
     marginBottom: "1rem",
-    border: "1px solid black"
+    border: "1px solid black",
+    "&:hover": {
+      background: "grey"
+    }
   },
   placeInfoBoxHovered: {
     background: "grey"

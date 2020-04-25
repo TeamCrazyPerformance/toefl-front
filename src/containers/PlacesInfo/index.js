@@ -2,9 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import * as reviewApi from "../../api/reviewApi";
 import * as mainApi from "../../api/mainApi";
-import SidebarComponent from "../../components/Sidebar";
-import Visibility from "../../components/Visibility";
-import PlacesInfoBox from "../../components/PlacesInfoBox";
+import PlacesInfoWrapper from "../../components/PlacesInfoWrapper";
+import PlaceInfoBoxList from "../../components/PlaceInfoBoxList";
 import DetailPlaceInfoBox from "../../components/DetailPlaceInfoBox";
 import ReviewsBox from "../../components/ReviewsBox";
 
@@ -24,27 +23,28 @@ const PlacesInfo = props => {
   };
 
   return (
-    <SidebarComponent>
-      <Visibility isVisible={!focusedPlaceId}>
-        <PlacesInfoBox
+    <PlacesInfoWrapper>
+      {!focusedPlaceId ? (
+        <PlaceInfoBoxList
           places={places}
           hoveredPlaceId={hoveredPlaceId}
           setFocusedPlaceId={setFocusedPlaceId}
         />
-      </Visibility>
-      <Visibility isVisible={!!focusedPlaceId}>
-        <DetailPlaceInfoBox
-          focusedPlaceId={focusedPlaceId}
-          getDetailPlace={getDetailPlace}
-          getPlaceRating={getPlaceRating}
-          setFocusedPlaceId={setFocusedPlaceId}
-        />
-        <ReviewsBox
-          focusedPlaceId={focusedPlaceId}
-          getPlaceReview={getPlaceReview}
-        />
-      </Visibility>
-    </SidebarComponent>
+      ) : (
+        <>
+          <DetailPlaceInfoBox
+            focusedPlaceId={focusedPlaceId}
+            getDetailPlace={getDetailPlace}
+            getPlaceRating={getPlaceRating}
+            setFocusedPlaceId={setFocusedPlaceId}
+          />
+          <ReviewsBox
+            focusedPlaceId={focusedPlaceId}
+            getPlaceReview={getPlaceReview}
+          />
+        </>
+      )}
+    </PlacesInfoWrapper>
   );
 };
 
