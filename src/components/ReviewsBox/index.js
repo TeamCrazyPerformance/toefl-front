@@ -15,9 +15,9 @@ const ReviewsBox = props => {
     getPlaceReview(focusedPlaceId, page).then(response => {
       if (!(response instanceof Error)) {
         const remainReviews = response.totalReview - PAGE_PER_COUNT * page;
-        if (remainReviews < 0) setHasNextPage(false);
+        if (remainReviews <= 0) setHasNextPage(false);
         else setHasNextPage(true);
-        setRreviews([...response.reviewList]);
+        setRreviews([...response.reviews]);
       }
     });
   }, [focusedPlaceId, page]);
