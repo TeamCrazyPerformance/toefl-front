@@ -12,23 +12,14 @@ const ReviewsBox = props => {
   const PAGE_PER_COUNT = 10;
 
   useEffect(() => {
-    if (focusedPlaceId) {
-      getPlaceReview(focusedPlaceId, page).then(response => {
-        if (!(response instanceof Error)) {
-          const remainReviews = response.totalReview - PAGE_PER_COUNT * page;
-          if (remainReviews < 0) setHasNextPage(false);
-          else setHasNextPage(true);
-
-          setRreviews([...response.reviewList]);
-        }
-      });
-    }
-
-    return () => {
-      setRreviews([]);
-      setPage(0);
-      setHasNextPage(false);
-    };
+    getPlaceReview(focusedPlaceId, page).then(response => {
+      if (!(response instanceof Error)) {
+        const remainReviews = response.totalReview - PAGE_PER_COUNT * page;
+        if (remainReviews < 0) setHasNextPage(false);
+        else setHasNextPage(true);
+        setRreviews([...response.reviewList]);
+      }
+    });
   }, [focusedPlaceId, page]);
 
   const getPreviousReview = () => setPage(page - 1);
@@ -42,7 +33,7 @@ const ReviewsBox = props => {
           return <ReviewBox key={review.reviewerId} />;
         })
       ) : (
-        <div>아직 리뷰가 없습니다.</div>
+        <div>아직 리뷰가 없습니다</div>
       )}
 
       {page === 0 ? null : (

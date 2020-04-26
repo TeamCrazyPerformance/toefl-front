@@ -2,13 +2,16 @@ import React from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 
-const PlaceBoxStyles = makeStyles(() => ({
-  placeBoxWrapper: {
+const PlaceInfoBoxStyles = makeStyles(() => ({
+  paceInfoBoxWrapper: {
     width: "100%",
     marginBottom: "1rem",
-    border: "1px solid black"
+    border: "1px solid black",
+    "&:hover": {
+      background: "grey"
+    }
   },
-  placeBoxHovered: {
+  placeInfoBoxHovered: {
     background: "grey"
   },
   placeName: {
@@ -34,20 +37,20 @@ const PlaceBoxStyles = makeStyles(() => ({
   }
 }));
 
-const PlaceBox = props => {
+const PlaceInfoBox = props => {
   const {
-    placeBoxWrapper,
-    placeBoxHovered,
+    paceInfoBoxWrapper,
+    placeInfoBoxHovered,
     placeName,
     placeLocationAddress
-  } = PlaceBoxStyles();
+  } = PlaceInfoBoxStyles();
   const { place, hoveredPlaceId, setFocusedPlaceId } = props;
   const focusPlace = () => setFocusedPlaceId(place.placeId);
 
   return (
     <div
-      className={`${placeBoxWrapper} ${hoveredPlaceId === place.placeId &&
-        placeBoxHovered}`}
+      className={`${paceInfoBoxWrapper} ${hoveredPlaceId === place.placeId &&
+        placeInfoBoxHovered}`}
     >
       <button className={placeName} type="button" onClick={focusPlace}>
         {place.name}
@@ -57,7 +60,7 @@ const PlaceBox = props => {
   );
 };
 
-PlaceBox.propTypes = {
+PlaceInfoBox.propTypes = {
   place: PropTypes.shape({
     name: PropTypes.string,
     placeId: PropTypes.string,
@@ -71,7 +74,7 @@ PlaceBox.propTypes = {
   setFocusedPlaceId: PropTypes.func.isRequired
 };
 
-PlaceBox.defaultProps = {
+PlaceInfoBox.defaultProps = {
   place: {
     name: "",
     placeId: "",
@@ -83,4 +86,4 @@ PlaceBox.defaultProps = {
   }
 };
 
-export default PlaceBox;
+export default PlaceInfoBox;

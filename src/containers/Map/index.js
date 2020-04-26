@@ -1,32 +1,51 @@
 import React from "react";
 import PropTypes from "prop-types";
 import * as mainApi from "../../api/mainApi";
-import MapComponent from "../../components/Map";
+import MapComponent from "../../components/MapComponent";
 
 const Map = props => {
   const {
     places,
-    setMapInstance,
-    setPlaces,
+    searchPlaceNearBy,
     setHoveredPlaceId,
     setFocusedPlaceId
   } = props;
 
-  const searchPlaceNearBy = mapInstance => {
+  const createMap = (ref, mapOption) => {
+    const mapInstance = mainApi.createMap(ref, mapOption);
     const searchRadius = 4000 / mapInstance.zoom;
-    mainApi
-      .fetchPlaceNearBy(mapInstance, searchRadius)
-      .then(newPlaces => setPlaces([...newPlaces]))
-      .catch(() => setPlaces([]));
+    mapInstance.addListener("dragend", () => searchPlaceNearBy(searchRadius));
+    searchPlaceNearBy(searchRadius);
+  };
+
+  const createMapMarkers = newPlaces => {
+    const mapMarkersInstance = newPlaces.map(place => {
+      const mapMarker = mainApi.createMapMarker({
+        lat: place.location.lat,
+        lng: place.location.lng
+      });
+
+      mapMarker.addListener("mouseover", () => {
+        setHoveredPlaceId(place.placeId);
+      });
+      mapMarker.addListener("mouseout", () => {
+        setHoveredPlaceId("");
+      });
+      mapMarker.addListener("click", () => {
+        setFocusedPlaceId(place.placeId);
+      });
+
+      return mapMarker;
+    });
+
+    return mapMarkersInstance;
   };
 
   return (
     <MapComponent
       places={places}
-      setParentMapInstance={setMapInstance}
-      searchPlaceNearBy={searchPlaceNearBy}
-      setHoveredPlaceId={setHoveredPlaceId}
-      setFocusedPlaceId={setFocusedPlaceId}
+      createMap={createMap}
+      createMapMarkers={createMapMarkers}
     />
   );
 };
@@ -42,8 +61,7 @@ Map.propTypes = {
       }).isRequired
     })
   ).isRequired,
-  setMapInstance: PropTypes.func.isRequired,
-  setPlaces: PropTypes.func.isRequired,
+  searchPlaceNearBy: PropTypes.func.isRequired,
   setHoveredPlaceId: PropTypes.func.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
 };

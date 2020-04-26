@@ -1,4 +1,15 @@
-export const fetchPlaceNearBy = (mapInstance, searchRadius) => {
+let mapInstance = {};
+
+export const createMap = (ref, mapOption) => {
+  mapInstance = new window.google.maps.Map(ref, mapOption);
+  return mapInstance;
+};
+
+export const createMapMarker = position => {
+  return new window.google.maps.Marker({ position, map: mapInstance });
+};
+
+export const fetchPlaceNearBy = searchRadius => {
   return new Promise((resolve, reject) => {
     const service = new window.google.maps.places.PlacesService(mapInstance);
     service.nearbySearch(
@@ -31,7 +42,7 @@ export const fetchPlaceNearBy = (mapInstance, searchRadius) => {
   });
 };
 
-export const fetchPlace = (mapInstance, placeId) => {
+export const fetchPlace = placeId => {
   return new Promise((resolve, reject) => {
     const service = new window.google.maps.places.PlacesService(mapInstance);
     service.getDetails(

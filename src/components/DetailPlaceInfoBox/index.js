@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 
-const DetailPlaceBoxStyles = makeStyles(() => ({
+const DetailPlaceInfoBoxStyles = makeStyles(() => ({
   placeInfoBoxWrapper: {
     width: "100%",
     marginBottom: "1rem",
@@ -55,7 +55,7 @@ const DetailPlaceBoxStyles = makeStyles(() => ({
   }
 }));
 
-const DetailPlaceBox = props => {
+const DetailPlaceInfoBox = props => {
   const {
     placeInfoBoxWrapper,
     placeName,
@@ -63,7 +63,7 @@ const DetailPlaceBox = props => {
     placeLocationPhoneNum,
     placeLocationAddress,
     goBackButton
-  } = DetailPlaceBoxStyles();
+  } = DetailPlaceInfoBoxStyles();
   const {
     focusedPlaceId,
     getDetailPlace,
@@ -71,30 +71,23 @@ const DetailPlaceBox = props => {
     setFocusedPlaceId
   } = props;
   const [detailPlace, setDetailPlace] = useState({});
-  const [customPlaceRating, setCustomPlaceRating] = useState(0);
+  const [customPlaceRating, setCustomPlaceRating] = useState("");
 
   useEffect(() => {
+    setDetailPlace({
+      ...detailPlace,
+      name: "잠시만 기다려주세요",
+      address: "잠시만 기다려주세요",
+      phoneNumber: "잠시만 기다려주세요"
+    });
+    setCustomPlaceRating("잠시만 기다려주세요");
     if (focusedPlaceId) {
       getDetailPlace(focusedPlaceId).then(response => setDetailPlace(response));
       getPlaceRating(focusedPlaceId).then(rating => {
-        if (!isNaN(rating)) setCustomPlaceRating(rating);
-        else setCustomPlaceRating(0);
+        if (Number.isNaN(rating)) setCustomPlaceRating(rating);
+        else setCustomPlaceRating("평점을 가져올 수 없습니다");
       });
     }
-
-    return () => {
-      setDetailPlace({
-        name: "",
-        placeId: "",
-        address: "",
-        phoneNumber: "",
-        location: {
-          lat: 0,
-          lng: 0
-        }
-      });
-      setCustomPlaceRating(0);
-    };
   }, [focusedPlaceId]);
 
   return (
@@ -118,11 +111,11 @@ const DetailPlaceBox = props => {
   );
 };
 
-DetailPlaceBox.propTypes = {
+DetailPlaceInfoBox.propTypes = {
   focusedPlaceId: PropTypes.string.isRequired,
   getDetailPlace: PropTypes.func.isRequired,
   getPlaceRating: PropTypes.func.isRequired,
   setFocusedPlaceId: PropTypes.func.isRequired
 };
 
-export default DetailPlaceBox;
+export default DetailPlaceInfoBox;
