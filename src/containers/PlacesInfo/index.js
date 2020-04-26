@@ -5,6 +5,7 @@ import * as mainApi from "../../api/mainApi";
 import PlacesInfoWrapper from "../../components/PlacesInfoWrapper";
 import PlaceInfoBoxList from "../../components/PlaceInfoBoxList";
 import DetailPlaceInfoBox from "../../components/DetailPlaceInfoBox";
+import ReviewInputBox from "../../components/ReviewInputBox";
 import ReviewsBox from "../../components/ReviewsBox";
 
 const PlacesInfo = props => {
@@ -38,6 +39,7 @@ const PlacesInfo = props => {
             getPlaceRating={getPlaceRating}
             setFocusedPlaceId={setFocusedPlaceId}
           />
+          <ReviewInputBox />
           <ReviewsBox
             focusedPlaceId={focusedPlaceId}
             getPlaceReview={getPlaceReview}
